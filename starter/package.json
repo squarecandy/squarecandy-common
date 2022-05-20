@@ -34,6 +34,7 @@
 		"@wordpress/scripts": "^23.1.0",
 		"@wordpress/stylelint-config": "^20.0.2",
 		"autoprefixer": "^9.8.6",
+		"caniuse-lite": "^1.0.30001341",
 		"cssnano": "^5.1.8",
 		"grunt": "^1.5.2",
 		"grunt-contrib-clean": "^2.0.0",
