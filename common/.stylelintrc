@@ -15,6 +15,7 @@
 		"scss/no-global-function-names": null,
 		"scss/at-extend-no-missing-placeholder": null,
 		"scss/operator-no-unspaced": null,
+		"custom-property-no-missing-var-function": null,
 		"max-line-length": 140,
 		"selector-class-pattern": "^[a-z][a-zA-Z0-9_-]+$",
 		"selector-id-pattern": "^[a-z][a-zA-Z0-9_-]+$",
