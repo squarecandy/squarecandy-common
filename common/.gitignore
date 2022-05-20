@@ -9,3 +9,4 @@ phpcs.phar
 /sync-remote-*
 /sync-staging-config.sh
 /sync-staging-*
+*.code-workspace
