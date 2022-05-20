@@ -37,8 +37,26 @@ module.exports = function( grunt ) {
 			},
 		},
 		copy: {
-			js: {
+			init: {
 				files: [
+					{
+						expand: true,
+						cwd: 'node_modules/squarecandy-common/plugin', // choose plugin or theme depending on your project
+						src: '**/*',
+						dest: '',
+						dot: true,
+					},
+				],
+			},
+			preflight: {
+				files: [
+					{
+						expand: true,
+						cwd: 'node_modules/squarecandy-common/common',
+						src: '**/*',
+						dest: '',
+						dot: true,
+					},
 					{
 						expand: true,
 						cwd: 'node_modules/jquery-cycle2/build',
@@ -69,10 +87,6 @@ module.exports = function( grunt ) {
 						src: 'jquery.magnific-popup.min.js',
 						dest: 'dist/js/vendor',
 					},
-				],
-			},
-			css: {
-				files: [
 					{
 						expand: true,
 						cwd: 'node_modules/magnific-popup/dist',
@@ -177,7 +191,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'preflight', [
 		'sass',
 		'postcss',
-		'copy',
+		'copy:preflight',
 		'modernizr',
 		'terser',
 		'phpcs',
