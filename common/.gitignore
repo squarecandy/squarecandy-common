@@ -1,0 +1,11 @@
+.DS_Store
+.sass-cache
+/node_modules
+/node_modules/*
+/vendor
+/vendor/*
+phpcs.phar
+/sync-remote-config.sh
+/sync-remote-*
+/sync-staging-config.sh
+/sync-staging-*

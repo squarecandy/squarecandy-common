@@ -1,0 +1,12 @@
+{
+	"name": "squarecandy-common",
+	"version": "1.0.0",
+	"description": "This is the one for the squarecandy-common repo. Don't copy this one to your project.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/squarecandy/squarecandy-common.git"
+	},
+	"author": "Square Candy Design / Peter Wise",
+	"license": "UNLICENSED",
+	"homepage": "https://github.com/squarecandy/squarecandy-common"
+}
