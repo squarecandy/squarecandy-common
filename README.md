@@ -30,6 +30,9 @@ The main `grunt-postcss` pacakge is abandoned. We are now using this fork: `@lod
 
 The `node-sass` package - while still technically receiving maintenance/security updates - is basically abandoned and the whole Sass community is focused on Dart Sass. We are migrating any existing projects that used `node-sass` to use the `sass` (which is the npm slug for the Dart Sass package).
 
+One unfortunate side-effect of this change is that `grunt-sass` when combined with Dart Sass seems to create css map files with absolute local file URLs. Relative URLs would be much better. We are still looking a solution for this issue:
+https://github.com/sindresorhus/grunt-sass/issues/299 
+
 ### WordPress packages
 
 All of the most updated wordpress packages are under the `@wordpress` user prefix. For example, we are no longer using `stylelint-config-wordpress` and should instead use `@wordpress/stylelint-config`.
