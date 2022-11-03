@@ -163,6 +163,10 @@ module.exports = function( grunt ) {
 				cmd: 'eslint',
 				args: [ 'js/*.js', '--fix' ],
 			},
+			bump: {
+				cmd: 'npm',
+				args: [ 'run', 'release', '--', '--prerelease', 'dev', '--skip.tag', '--skip.changelog' ],
+			},
 		},
 		watch: {
 			css: {
@@ -208,16 +212,11 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-modernizr' );
 	grunt.loadNpmTasks( 'grunt-run' );
 	grunt.loadNpmTasks( 'grunt-string-replace' );
+
 	grunt.registerTask( 'init', [ 'sass', 'postcss', 'copy', 'modernizr', 'terser' ] );
-	grunt.registerTask( 'default', [ 'run', 'sass', 'postcss', 'terser', 'watch' ] );
-	grunt.registerTask( 'preflight', [
-		'sass',
-		'postcss',
-		'copy:preflight',
-		'modernizr',
-		'terser',
-		'phpcs',
-		'stylelint',
-		'eslint',
-	] );
+	grunt.registerTask( 'default', [ 'run', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
+	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'copy:preflight', 'modernizr', 'terser', 'string-replace' ] );
+	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
+	grunt.registerTask( 'bump', [ 'run:bump' ] );
+	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump' ] );
 };

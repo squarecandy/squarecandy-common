@@ -31,4 +31,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
-    - run: grunt preflight
+    - run: grunt lint
