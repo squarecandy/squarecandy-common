@@ -174,6 +174,27 @@ module.exports = function( grunt ) {
 				tasks: [ 'run:eslintfix', 'terser' ],
 			},
 		},
+		'string-replace': {
+			dist: {
+				files: [
+					{
+						expand: true,
+						cwd: 'dist/css/',
+						src: '*.min.css.map',
+						dest: 'dist/css/',
+					},
+				],
+				options: {
+					replacements: [
+						// place files inline example
+						{
+							pattern: /(file:\/\/\/([^,]*)\/wp-content)+/g,
+							replacement: '/wp-content',
+						},
+					],
+				},
+			},
+		},
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
@@ -186,6 +207,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-modernizr' );
 	grunt.loadNpmTasks( 'grunt-run' );
+	grunt.loadNpmTasks( 'grunt-string-replace' );
 	grunt.registerTask( 'init', [ 'sass', 'postcss', 'copy', 'modernizr', 'terser' ] );
 	grunt.registerTask( 'default', [ 'run', 'sass', 'postcss', 'terser', 'watch' ] );
 	grunt.registerTask( 'preflight', [
