@@ -18,8 +18,7 @@
 		"not dead"
 	],
 	"scripts": {
-		"release": "standard-version",
-		"preinstall": "composer install"
+		"release": "standard-version"
 	},
 	"standard-version": {
 		"skip": {
