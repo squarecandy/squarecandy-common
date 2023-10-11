@@ -171,7 +171,7 @@ module.exports = function( grunt ) {
 		watch: {
 			css: {
 				files: [ 'css/*.scss' ],
-				tasks: [ 'run:stylelintfix', 'sass', 'postcss' ],
+				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace' ],
 			},
 			js: {
 				files: [ 'js/*.js' ],
