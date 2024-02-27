@@ -97,10 +97,12 @@ module.exports = function( grunt ) {
 			dist: {
 				crawl: false,
 				customTests: [],
-				dest: 'dist/js/vendor/modernizr.js',
+				dest: 'dist/js/vendor/modernizr.min.js',
 				// lookup test names or make a custom set here: https://modernizr.com/download?setclasses
 				tests: [
 					'hiddenscroll',
+					'input',
+					'inputtypes',
 					'svg',
 					'webp',
 					'touchevents',
@@ -110,6 +112,7 @@ module.exports = function( grunt ) {
 					'objectfit',
 					'cssvhunit',
 					'cssvwunit',
+					'flexgap',
 				],
 				options: [ 'setClasses' ],
 				uglify: true,
