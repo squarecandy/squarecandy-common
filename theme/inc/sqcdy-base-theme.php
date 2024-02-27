@@ -113,4 +113,5 @@ endif;
 // see: https://github.com/rhubarbgroup/redis-cache/issues/449
 if ( class_exists( 'Fragen\Git_Updater\Ignore' ) ) :
 	new Fragen\Git_Updater\Ignore( 'redis-cache', 'redis-cache/redis-cache.php' );
+	new Fragen\Git_Updater\Ignore( 'woocommerce-subscriptions-gifting', 'woocommerce-subscriptions-gifting/woocommerce-subscriptions-gifting.php' );
 endif;
