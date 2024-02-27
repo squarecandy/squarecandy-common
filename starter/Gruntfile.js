@@ -37,22 +37,19 @@ module.exports = function( grunt ) {
 			},
 		},
 		copy: {
-			init: {
+			preflight: {
 				files: [
+					// common
 					{
 						expand: true,
-						cwd: 'node_modules/squarecandy-common/plugin', // choose plugin or theme depending on your project
+						cwd: 'node_modules/squarecandy-common/common',
 						src: '**/*',
 						dest: '',
 						dot: true,
 					},
-				],
-			},
-			preflight: {
-				files: [
 					{
 						expand: true,
-						cwd: 'node_modules/squarecandy-common/common',
+						cwd: 'node_modules/squarecandy-common/plugin', // choose plugin or theme depending on your project
 						src: '**/*',
 						dest: '',
 						dot: true,
@@ -213,7 +210,6 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-run' );
 	grunt.loadNpmTasks( 'grunt-string-replace' );
 
-	grunt.registerTask( 'init', [ 'sass', 'postcss', 'copy', 'modernizr', 'terser' ] );
 	grunt.registerTask( 'default', [ 'run', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'copy:preflight', 'modernizr', 'terser', 'string-replace' ] );
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
