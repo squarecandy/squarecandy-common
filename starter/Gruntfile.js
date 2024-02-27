@@ -171,11 +171,11 @@ module.exports = function( grunt ) {
 		watch: {
 			css: {
 				files: [ 'css/*.scss' ],
-				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace' ],
+				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'shell:ding' ],
 			},
 			js: {
 				files: [ 'js/*.js' ],
-				tasks: [ 'run:eslintfix', 'terser' ],
+				tasks: [ 'run:eslintfix', 'terser', 'shell:ding' ],
 			},
 		},
 		'string-replace': {
@@ -199,8 +199,14 @@ module.exports = function( grunt ) {
 				},
 			},
 		},
+		shell: {
+			ding: {
+				command: 'tput bel',
+			},
+		},
 	} );
 
+	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-terser' );
