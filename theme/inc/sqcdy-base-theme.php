@@ -107,3 +107,10 @@ if ( function_exists( 'seopress_init' ) ) :
 		}
 	endif;
 endif;
+
+
+// prevent Git Updater errors when using Redis Cache
+// see: https://github.com/rhubarbgroup/redis-cache/issues/449
+if ( class_exists( 'Fragen\Git_Updater\Ignore' ) ) :
+	new Fragen\Git_Updater\Ignore( 'redis-cache', 'redis-cache/redis-cache.php' );
+endif;
