@@ -1,6 +1,10 @@
 <?php
 // PHP code that should be distributed to all base or standalone themes goes here.
 
+// Turn Off Application Passwords on All Projects:
+add_filter( 'wp_is_application_passwords_available', '__return_false', 20 );
+// use priority higher than 20 to override elsewhere
+
 // EWWW/EasyIO - short-circuit and bypass auto-generation of extra srcset sizes
 // https://docs.ewww.io/article/48-customizing-exactdn
 add_filter( 'exactdn_srcset_multipliers', '__return_false' );
