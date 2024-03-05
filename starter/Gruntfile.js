@@ -54,6 +54,7 @@ module.exports = function( grunt ) {
 						dest: '',
 						dot: true,
 					},
+					// js
 					{
 						expand: true,
 						cwd: 'node_modules/jquery-cycle2/build',
@@ -84,6 +85,7 @@ module.exports = function( grunt ) {
 						src: 'jquery.magnific-popup.min.js',
 						dest: 'dist/js/vendor',
 					},
+					// css
 					{
 						expand: true,
 						cwd: 'node_modules/magnific-popup/dist',
@@ -167,15 +169,19 @@ module.exports = function( grunt ) {
 				cmd: 'npm',
 				args: [ 'run', 'release', '--', '--prerelease', 'dev', '--skip.tag', '--skip.changelog' ],
 			},
+			ding: {
+				cmd: 'tput',
+				args: [ 'bel' ],
+			}
 		},
 		watch: {
 			css: {
 				files: [ 'css/*.scss' ],
-				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'shell:ding' ],
+				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'run:ding' ],
 			},
 			js: {
 				files: [ 'js/*.js' ],
-				tasks: [ 'run:eslintfix', 'terser', 'shell:ding' ],
+				tasks: [ 'run:eslintfix', 'terser', 'run:ding' ],
 			},
 		},
 		'string-replace': {
@@ -199,14 +205,8 @@ module.exports = function( grunt ) {
 				},
 			},
 		},
-		shell: {
-			ding: {
-				command: 'tput bel',
-			},
-		},
 	} );
 
-	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-terser' );
@@ -223,5 +223,5 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'copy:preflight', 'modernizr', 'terser', 'string-replace' ] );
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
-	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump' ] );
+	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump', 'run:ding' ] );
 };
