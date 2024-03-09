@@ -172,7 +172,7 @@ module.exports = function( grunt ) {
 			ding: {
 				cmd: 'tput',
 				args: [ 'bel' ],
-			}
+			},
 		},
 		watch: {
 			css: {
@@ -219,7 +219,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-run' );
 	grunt.loadNpmTasks( 'grunt-string-replace' );
 
-	grunt.registerTask( 'default', [ 'run', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
+	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'copy:preflight', 'modernizr', 'terser', 'string-replace' ] );
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
