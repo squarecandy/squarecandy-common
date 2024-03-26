@@ -46,6 +46,15 @@ module.exports = function( grunt ) {
 						src: '**/*',
 						dest: '',
 						dot: true,
+						rename( dest, matchedSrcPath ) {
+							// the exact file name .gitignore is reserved by npm
+							// so we track it as /common/gitignore (no dot) and rename on copy
+							if ( matchedSrcPath === 'gitignore' ) {
+								return dest + '.gitignore';
+							}
+							// default for all other files
+							return dest + matchedSrcPath;
+						},
 					},
 					{
 						expand: true,
