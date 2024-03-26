@@ -172,7 +172,7 @@ module.exports = function( grunt ) {
 			},
 			eslintfix: {
 				cmd: 'eslint',
-				args: [ 'js/*.js', '--fix' ],
+				args: [ 'js/*.js', 'Gruntfile.js', '--fix' ],
 			},
 			bump: {
 				cmd: 'npm',
