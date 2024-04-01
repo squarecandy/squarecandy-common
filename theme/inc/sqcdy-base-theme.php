@@ -146,3 +146,108 @@ if ( class_exists( 'Fragen\Git_Updater\Ignore' ) ) :
 	new Fragen\Git_Updater\Ignore( 'redis-cache', 'redis-cache/redis-cache.php' );
 	new Fragen\Git_Updater\Ignore( 'woocommerce-subscriptions-gifting', 'woocommerce-subscriptions-gifting/woocommerce-subscriptions-gifting.php' );
 endif;
+
+
+// Add page slug to body class
+// modified from code originally found in: Starkers WordPress Theme - http://www.elliotjaystocks.com/
+if ( ! function_exists( 'squarecandy_add_slug_to_body_class' ) ) :
+	function squarecandy_add_slug_to_body_class( $classes ) {
+		global $post;
+
+		if ( is_home() ) {
+			$key = array_search( 'blog', $classes, true );
+			if ( $key > -1 ) {
+				unset( $classes[ $key ] );
+			}
+		} elseif ( is_page() ) {
+			$classes[] = sanitize_html_class( $post->post_name );
+		} elseif ( is_singular() ) {
+			$classes[] = sanitize_html_class( $post->post_name );
+		}
+
+		// Adds a class of group-blog to blogs with more than 1 published author.
+		if ( is_multi_author() ) {
+			$classes[] = 'group-blog';
+		}
+
+		// Adds a class of hfeed to non-singular pages.
+		if ( ! is_singular() ) {
+			$classes[] = 'hfeed';
+			$classes[] = 'not-single';
+		}
+		return $classes;
+	}
+	add_filter( 'body_class', 'squarecandy_add_slug_to_body_class' );
+endif;
+
+
+// Add browser to body classes
+if ( ! function_exists( 'squarecandy_browser_body_class' ) ) :
+	function squarecandy_browser_body_class( $classes ) {
+
+		global $is_edge, $is_lynx, $is_gecko, $is_IE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone;
+
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+		if ( $is_edge ) {
+			$classes[] = 'edge';
+		}
+		if ( $is_lynx ) {
+			$classes[] = 'lynx';
+		}
+		if ( $is_gecko ) {
+			$classes[] = 'gecko';
+		}
+		if ( $is_opera ) {
+			$classes[] = 'opera';
+		}
+		if ( $is_NS4 ) {
+			$classes[] = 'ns4';
+		}
+		if ( $is_safari ) {
+			$classes[] = 'safari';
+		}
+		if ( $is_chrome ) {
+			$classes[] = 'chrome';
+		}
+		if ( $is_IE ) {
+			$classes[] = 'ie';
+		}
+		if ( $is_iphone || stristr( $user_agent, 'iPhone' ) ) {
+			$classes[]         = 'iphone';
+			$classes['mobile'] = 'mobile';
+		}
+		if ( stristr( $user_agent, 'iPad' ) ) {
+			$classes[]         = 'ipad';
+			$classes['mobile'] = 'mobile';
+		}
+		if ( stristr( $user_agent, 'Android' ) ) {
+			$classes[]         = 'android';
+			$classes['mobile'] = 'mobile';
+		}
+
+		if ( stristr( $user_agent, 'mac' ) ) {
+			$classes[] = 'osx';
+		} elseif ( stristr( $user_agent, 'linux' ) ) {
+			$classes[] = 'linux';
+		} elseif ( stristr( $user_agent, 'windows' ) ) {
+			$classes[] = 'windows';
+		}
+		return $classes;
+	}
+
+	add_filter( 'body_class', 'squarecandy_browser_body_class' );
+endif;
+
+// filter [STAGING] out of blogname so staging sites are identical to production
+// NB only works if 2nd param of get_blog_info is set to 'display'
+// ( useful for when we run visual regression tests )
+if ( ! function_exists( 'squarecandy_staging_blogname' ) ) :
+	add_filter( 'bloginfo', 'squarecandy_staging_blogname', 10, 2 );
+	function squarecandy_staging_blogname( $name, $show ) {
+		if ( 'name' === $show && strpos( $name, '[STAGING]' ) !== false ) {
+			$name = trim( str_replace( '[STAGING]', '', $name ) );
+		}
+		return $name;
+	}
+endif;
