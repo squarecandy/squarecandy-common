@@ -110,6 +110,33 @@ if ( function_exists( 'seopress_init' ) ) :
 			return $image;
 		}
 	endif;
+
+	if ( ! function_exists( 'squarecandy_seopress_social_title' ) ) :
+
+		add_filter( 'seopress_social_og_title', 'squarecandy_seopress_social_title' );
+		add_filter( 'seopress_social_twitter_card_title', 'squarecandy_seopress_social_title' );
+
+		/**
+		 * Fix bug where if there's no custom title set for this archive type, SEOPress defaults to the_title_attribute,
+		 * which will be the title of one of the posts in the archive. We want the WP generated post title tag instead.
+		 * @param $title string e.g. <meta property="og:title" content="Worship (In Person and Online)">
+		 * @return string
+		 */
+		function squarecandy_seopress_social_title( $title ) {
+			if ( is_archive() ) {
+				preg_match( '/<meta.*content="(.*)"/m', $title, $matches );
+				$post_title     = the_title_attribute( 'echo=0' ); //seopress will default to this if no custom title for an archive type
+				$seopress_title = seopress_titles_the_title(); //this will be blank if there us no custom title for the archive type
+				if ( ! $seopress_title && $matches && isset( $matches[1] ) && $matches[1] === $post_title ) {
+					//replace the content part of the tag with the WP generated tag title
+					$title = str_replace( $post_title, wp_get_document_title(), $title );
+				}
+			}
+			return $title;
+		};
+
+	endif;
+
 endif;
 
 
