@@ -52,7 +52,6 @@ if ( function_exists( 'seopress_init' ) ) :
 			// handle lots of line breaks
 			$seopress_titles_desc = trim( $seopress_titles_desc );
 			$seopress_titles_desc = str_replace( array( "\r\r", "\n\n", "\r\n\r\n", "\r\n", "\r", "\n", '<br>' ), ' • ', $seopress_titles_desc );
-			$seopress_titles_desc = trim( $seopress_titles_desc, " \n\r\t\v\x00'“”\"" ); //trim unbalanced quotes etc - should we still do this?
 
 			// handle length, but only if we didn't explicitly set the desc for this post & aren't falling back to the global desc
 			if ( ! $explicitly_set && ! $default_set && strlen( $seopress_titles_desc ) > $max_length ) {
