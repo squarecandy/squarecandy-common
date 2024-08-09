@@ -2,9 +2,21 @@
 // PHP code that should be distributed to all themes & plugins goes here.
 
 // for debugging
+
+if ( ! function_exists( 'sqcdy_is_debug' ) ) :
+	function sqcdy_is_debug() {
+		// allow these debug functions to be used outside of Wordpress
+		if ( defined( 'WPINC') ) {
+			$debug_mode = defined( 'WP_DEBUG' ) && WP_DEBUG;
+		} else {
+			$debug_mode = defined( 'DEBUG' ) && DEBUG;
+		}
+	}
+endif;
+
 if ( ! function_exists( 'pre_r' ) ) :
 	function pre_r( $array ) {
-		if ( WP_DEBUG ) {
+		if ( sqcdy_is_debug() ) {
 			print '<pre class="squarecandy-pre-r">';
 			print_r( $array ); // phpcs:ignore
 			print '</pre>';
@@ -16,7 +28,7 @@ endif;
 //phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r
 if ( ! function_exists( 'sqcdy_log' ) ) :
 	function sqcdy_log( $object, $message = '', $override_debug = false ) {
-		$debug_mode = defined( 'WP_DEBUG' ) && WP_DEBUG;
+		$debug_mode = sqcdy_is_debug();
 		$is_string  = is_string( $object );
 		$is_numeric = is_numeric( $object );
 
