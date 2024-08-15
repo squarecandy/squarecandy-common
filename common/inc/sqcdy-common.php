@@ -11,6 +11,7 @@ if ( ! function_exists( 'sqcdy_is_debug' ) ) :
 		} else {
 			$debug_mode = defined( 'DEBUG' ) && DEBUG;
 		}
+		return $debug_mode;
 	}
 endif;
 
