@@ -48,3 +48,22 @@ if ( ! function_exists( 'str_contains' ) ) {
 		return $needle !== '' && mb_strpos( $haystack, $needle ) !== false; // phpcs:ignore WordPress.PHP.YodaConditions.NotYoda
 	}
 }
+
+// common function to check if our major 2024 accessibility update "views 2" is enabled
+if ( ! function_exists( 'sqcdy_is_views2' ) ) :
+	function sqcdy_is_views2( $slug = 'my_plugin_or_theme_slug' ) {
+
+		// allow forcing Views 2 across all of our themes and plugins
+		// by defining SQCDY_VIEWS2 as true in wp-config.php
+		if ( defined( 'SQCDY_VIEWS2' ) && SQCDY_VIEWS2 ) {
+			return true;
+		}
+
+		// allowing adding an ACF checkbox to enable Views 2 per theme/plugin
+		if ( get_option( 'options_' . $slug . '_views2' ) ) {
+			return true;
+		}
+
+		return false;
+	}
+endif;
