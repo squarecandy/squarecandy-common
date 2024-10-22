@@ -5,8 +5,8 @@
 
 if ( ! function_exists( 'sqcdy_is_debug' ) ) :
 	function sqcdy_is_debug() {
-		// allow these debug functions to be used outside of Wordpress
-		if ( defined( 'WPINC') ) {
+		// allow these debug functions to be used outside of WordPress
+		if ( defined( 'WPINC' ) ) {
 			$debug_mode = defined( 'WP_DEBUG' ) && WP_DEBUG;
 		} else {
 			$debug_mode = defined( 'DEBUG' ) && DEBUG;

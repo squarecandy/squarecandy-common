@@ -271,7 +271,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			</li>
 			<?php
 		}
-	endif;	
+	endif;
 
 	/**
 	* GIVEWP - Filter to modify Donation CSV data when exporting donation
@@ -384,7 +384,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			return $views;
 		}
 	endif;
-	
+
 	/**
 	 * GIVEWP - On the admin donations list page, add a hidden input for 'anonymous_donation'
 	 */
@@ -418,7 +418,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			return $args;
 		}
 	endif;
-	
+
 	if ( ! function_exists( 'squarecandy_give_payments_table_columns' ) ) :
 		add_filter( 'give_payments_table_columns', 'squarecandy_give_payments_table_columns' );
 		// GIVEWP - ADD AN ANONYMOUS DONATION COLUMN TO	LIST VIEW
@@ -429,7 +429,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			return $columns;
 		}
 	endif;
-	
+
 	if ( ! function_exists( 'squarecandy_give_payments_table_column' ) ) :
 		add_filter( 'give_payments_table_column', 'squarecandy_give_payments_table_column', 10, 3 );
 		function squarecandy_give_payments_table_column( $value, $payment_id, $column_name ) {
@@ -440,4 +440,4 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			return $value;
 		}
 	endif;
-endif; //class_exists( 'Give\Donations\DonationsAdminPage' )	
+endif; // end GiveWP
