@@ -29,7 +29,7 @@
 	"devDependencies": {
 		"@lodder/grunt-postcss": "^3.1.1",
 		"@types/eslint": "6.8.0",
-		"@wordpress/eslint-plugin": "^8.0.2",
+		"@wordpress/eslint-plugin": "^16.0.0",
 		"@wordpress/scripts": "^23.1.0",
 		"@wordpress/stylelint-config": "^20.0.2",
 		"autoprefixer": "^9.8.6",

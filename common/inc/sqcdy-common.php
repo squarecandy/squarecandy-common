@@ -80,3 +80,16 @@ if ( ! function_exists( 'sqcdy_is_views2' ) ) :
 		return false;
 	}
 endif;
+
+// alternative names for the misleading is_front_page and is_home functions
+if ( ! function_exists( 'sqcdy_is_homepage' ) ) :
+	function sqcdy_is_homepage() {
+		return is_front_page();
+	}
+endif;
+
+if ( ! function_exists( 'sqcdy_is_blog_home' ) ) :
+	function sqcdy_is_blog_home() {
+		return is_home();
+	}
+endif;
