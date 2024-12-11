@@ -5,6 +5,10 @@
 add_filter( 'wp_is_application_passwords_available', '__return_false', 20 );
 // use priority higher than 20 to override elsewhere
 
+// Remove WP version from the front end
+remove_action( 'wp_head', 'wp_generator' );
+add_filter( 'the_generator', '__return_empty_string' );
+
 // EWWW/EasyIO - short-circuit and bypass auto-generation of extra srcset sizes
 // https://docs.ewww.io/article/48-customizing-exactdn
 add_filter( 'exactdn_srcset_multipliers', '__return_false' );
