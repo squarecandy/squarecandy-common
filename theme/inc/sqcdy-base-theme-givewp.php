@@ -29,6 +29,62 @@ if ( ! function_exists( 'squarecandy_give_wc_sync_payment_status' ) ) :
 endif;
 
 
+// Validate Give form submissions
+if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
+	/**
+	 * Validate the submission of a Give form
+	 *
+	 * @param array $valid_data
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	function give_squarecandy_validate_submission( $valid_data, $data ) {
+
+		// check for a valid gateway
+		$gateway     = $valid_data['gateway'] ?? false;
+		$formid      = $data['give-form-id'] ?? false;
+		$valid_forms = give_get_enabled_payment_gateways( $formid );
+
+		// if gateway slug is not a key in the array of valid gateways, or gateway is totally empty, set error state
+		if ( ! array_key_exists( $gateway, $valid_forms ) || empty( $gateway ) ) {
+			give_set_error( 'gateway_invalid', __( 'Something went wrong. We were not able to detect a selected payment gateway. Please contact customer support for assistance.', 'give' ) );
+		}
+
+		// check for a valid nonce
+		// (confirms that javascript is enabled and enforces one submission per page load)
+		$nonce = $data['givewp_js_test'] ?? false;
+		if ( ! wp_verify_nonce( $nonce, 'give-js-test-nonce' ) ) {
+			give_set_error( 'nonce_invalid', __( 'We were not able to verify your submission. Please ensure you are using a browser with javascript enabled - it is required for the functionality of this donation form. If you are still having trouble, please contact customer support for assistance. [Error: GWP45 - invalid nonce]', 'give' ) );
+		}
+
+		return $valid_data;
+	}
+	add_action( 'give_checkout_error_checks', 'give_squarecandy_validate_submission', 10, 2 );
+endif;
+
+// create a new hidden field for the nonce
+if ( ! function_exists( 'give_squarecandy_add_hidden_nonce_field' ) ) :
+	add_action( 'give_fields_payment_mode_before_gateways', 'give_squarecandy_add_hidden_nonce_field', 10, 1 );
+	function give_squarecandy_add_hidden_nonce_field( $collection ) {
+		$collection->append( give_field( 'hidden', 'givewp_js_test' ) );
+	}
+endif;
+
+// load the nonce value into the hidden field
+if ( ! function_exists( 'give_squarecandy_nonce_footer_script' ) ) :
+	function give_squarecandy_nonce_footer_script() {
+		// generate wp nonce
+		$nonce = wp_create_nonce( 'give-js-test-nonce' );
+		?>
+		<script type="text/javascript">
+			jQuery( 'input[name=givewp_js_test]' ).val( '<?php echo $nonce; ?>' );
+		</script>
+		<?php
+	}
+	add_action( 'wp_footer', 'give_squarecandy_nonce_footer_script' );
+endif;
+
 
 // GIVEWP - Data Export Improvements
 // ADD THE ABILITY TO FILTER BY & EXPORT THE ANONYMOUS DONATION FIELD
