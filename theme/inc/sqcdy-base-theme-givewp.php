@@ -12,6 +12,22 @@ if ( ! class_exists( 'Give' ) ) {
 }
 
 
+// Change the donation status to complete if the WC Order status is "Processing"
+// This sends the thank you email out right away instead of waiting until the product ships and is marked "Completed" in WC
+if ( ! function_exists( 'squarecandy_give_wc_sync_payment_status' ) ) :
+	add_filter( 'give_wc_sync_payment_status', 'squarecandy_give_wc_sync_payment_status', 999, 3 );
+	function squarecandy_give_wc_sync_payment_status( $wc_order_status, $donation_id, $wc_order ) {
+		// get the original WC status again because Give smooshes 'pending', 'processing' and 'on-hold' into 'pending' before this hook in $wc_order_status
+		$wc_original_status = $wc_order->get_status();
+
+		if ( 'processing' === $wc_original_status ) {
+			$wc_order_status = 'completed';
+		}
+
+		return $wc_order_status;
+	}
+endif;
+
 
 
 // GIVEWP - Data Export Improvements
