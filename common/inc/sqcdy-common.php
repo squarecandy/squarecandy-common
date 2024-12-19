@@ -95,12 +95,12 @@ if ( ! function_exists( 'sqcdy_is_blog_home' ) ) :
 endif;
 
 /** Output html to display slides of header images - theoryone theme & plugins
- * 
+ *
  * @param array  $header_images  acf image repeater.
  * @param bool   $views2 optional. default false
  * @param bool   $short optional. whether to include 'short-header-images' in the container div classes. default true
  * @param string $size optional.  wp image size. default 'huge'
- */ 
+ */
 if ( ! function_exists( 'squarecandy_slide_header_images' ) ) :
 	function squarecandy_slide_header_images( $header_images, $views2 = false, $short = true, $size = 'huge' ) {
 
@@ -111,7 +111,7 @@ if ( ! function_exists( 'squarecandy_slide_header_images' ) ) :
 			$images_classes  = 'template-header-images';
 			$images_classes .= $short ? ' short-header-images' : '';
 			$images_classes .= $multi_image ? ' template-header-slideshow' : '';
-		?>
+			?>
 
 		<div class="<?php echo $images_classes; ?>">
 
@@ -119,13 +119,13 @@ if ( ! function_exists( 'squarecandy_slide_header_images' ) ) :
 			foreach ( $header_images as $slide_image ) :
 				if ( function_exists( 'squarecandy_acf_srcset_image' ) ) :
 					$background_position = isset( $slide_image['background_position'] ) ? $slide_image['background_position'] : false;
-					$slide = get_squarecandy_acf_srcset_image( $slide_image['image'], $size, '100vw', false, false, $background_position );
-					$slide = str_replace( 'loading="lazy"', '', $slide );
+					$slide               = get_squarecandy_acf_srcset_image( $slide_image['image'], $size, '100vw', false, false, $background_position );
+					$slide               = str_replace( 'loading="lazy"', '', $slide );
 					echo $slide;
 
 				else :
 					$image = isset( $slide_image['image']['sizes'][ $size ] ) ? $slide_image['image']['sizes'][ $size ] : '';
-					$alt  = isset( $slide_image['image']['alt'] ) ? $slide_image['image']['alt'] : '';
+					$alt   = isset( $slide_image['image']['alt'] ) ? $slide_image['image']['alt'] : '';
 					?>
 					<figure>
 						<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
@@ -136,7 +136,7 @@ if ( ! function_exists( 'squarecandy_slide_header_images' ) ) :
 
 			if ( $multi_image ) :
 				if ( ! $views2 ) :
-				?>
+					?>
 					<span class="prev-control cycle-prevnext"></span>
 					<span class="next-control cycle-prevnext"></span>
 				<?php endif; ?>
