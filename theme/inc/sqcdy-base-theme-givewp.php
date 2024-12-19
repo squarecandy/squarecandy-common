@@ -172,7 +172,6 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			// bc of the way give sets up their existing filter links, they can end up with ?anonymous_donation in them too, so filter that out
 			if ( '1' === $current ) {
 				foreach ( $views as $key => $url ) {
-					sqcdy_log( $url, 'views ' . $key );
 					$views[ $key ] = str_replace( '&#038;anonymous_donation=1', '', $url );
 				}
 			}
