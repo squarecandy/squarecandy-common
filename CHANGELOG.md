@@ -13,11 +13,10 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * GiveWP change the donation status to complete if the WC Order status is "Processing"
+* GiveWP add WP nonce requirement to confirm javascript is in use.
+* Add squarecandy_slide_header_images function
 
 ### Bug Fixes
 
-* add squarecandy_slide_header_images function
-* add WP nonce requirement to confirm javascript is in use.
-* backout WP core version number code
 * update stylelint rules
-* don't reveal the WP version number
+
