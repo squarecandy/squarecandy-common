@@ -55,7 +55,10 @@ if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
 		// (confirms that javascript is enabled and enforces one submission per page load)
 		$nonce = $data['givewp_js_test'] ?? false;
 		if ( ! wp_verify_nonce( $nonce, 'give-js-test-nonce' ) ) {
+			// show the user an error message
 			give_set_error( 'nonce_invalid', __( 'We were not able to verify your submission. Please ensure you are using a browser with javascript enabled - it is required for the functionality of this donation form. If you are still having trouble, please contact customer support for assistance. [Error: GWP45 - invalid nonce]', 'give' ) );
+			// log the error
+			give_record_log( 'Invalid Nonce (Square Candy Security Check)', $data, 0, 'error' );
 		}
 
 		return $valid_data;
@@ -78,11 +81,24 @@ if ( ! function_exists( 'give_squarecandy_nonce_footer_script' ) ) :
 		$nonce = wp_create_nonce( 'give-js-test-nonce' );
 		?>
 		<script type="text/javascript">
-			jQuery( 'input[name=givewp_js_test]' ).val( '<?php echo $nonce; ?>' );
+			// use javascript to load the nonce into the hidden field with name givewp_js_test
+			document.addEventListener('DOMContentLoaded', function() {
+				// Find the hidden field by name and set the nonce value
+				var nonceField = document.querySelector('input[name="givewp_js_test"]');
+				if (nonceField) {
+					nonceField.value = '<?php echo $nonce; ?>';
+				}
+				setTimeout( function() {
+					var nonceField = document.querySelector('input[name="givewp_js_test"]');
+					if (nonceField) {
+						nonceField.value = '<?php echo $nonce; ?>';
+					}
+				}, 5000 );
+			});
 		</script>
 		<?php
 	}
-	add_action( 'wp_footer', 'give_squarecandy_nonce_footer_script' );
+	add_action( 'wp_footer', 'give_squarecandy_nonce_footer_script', 9999 );
 endif;
 
 
@@ -172,6 +188,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			// bc of the way give sets up their existing filter links, they can end up with ?anonymous_donation in them too, so filter that out
 			if ( '1' === $current ) {
 				foreach ( $views as $key => $url ) {
+					sqcdy_log( $url, 'views ' . $key );
 					$views[ $key ] = str_replace( '&#038;anonymous_donation=1', '', $url );
 				}
 			}
