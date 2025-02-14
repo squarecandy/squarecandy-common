@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [1.5.0] (2025-01-25)
 
+### Bug Fixes
+
+* GiveWP log any nonce errors in addition to showing the user the error;
+* GiveWP add additional nonce fill attempt after 5 seconds;
+* GiveWP nonce - remove jquery dependency
+
+### [1.5.0] (2025-01-25)
+
 ### Features
 
 * Pagination Function squarecandy_pagination to output consistent pagers across plugins and themes
