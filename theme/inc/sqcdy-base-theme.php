@@ -251,4 +251,7 @@ if ( ! function_exists( 'squarecandy_staging_blogname' ) ) :
 	}
 endif;
 
+// disable poorly thought out WP sizes auto implementation
+add_filter( 'wp_img_tag_add_auto_sizes', '__return_false' );
+
 require_once 'sqcdy-base-theme-givewp.php';
