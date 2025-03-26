@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.5.0] (2025-01-25)
+### [1.5.2] (2025-03-26)
+
+### Bug Fixes
+
+* fix WP 6.7.1 image sizes auto bug
+
+### [1.5.1] (2025-02-14)
 
 ### Bug Fixes
 
