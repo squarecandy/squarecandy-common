@@ -230,3 +230,17 @@ if ( ! function_exists( 'squarecandy_pagination' ) ) :
 		echo $page_links;
 	}
 endif;
+
+// wrapper for acf_add_options_page
+if ( ! function_exists( 'squarecandy_add_options_page' ) ) :
+	function squarecandy_add_options_page( $array ) {
+		add_action(
+			'init',
+			function() use ( $array ) {
+				if ( function_exists( 'acf_add_options_page' ) ) {
+					acf_add_options_page( $array );
+				}
+			}
+		);
+	}
+endif;
