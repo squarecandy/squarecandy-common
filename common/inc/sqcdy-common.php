@@ -233,11 +233,17 @@ endif;
 
 // wrapper for acf_add_options_page
 if ( ! function_exists( 'squarecandy_add_options_page' ) ) :
-	function squarecandy_add_options_page( $array ) {
+	function squarecandy_add_options_page( $array, $is_subpage = false ) {
+		$acf_present = function_exists( 'acf_add_options_page' );
+		if ( ! $acf_present ) {
+			return;
+		}
 		add_action(
 			'init',
-			function() use ( $array ) {
-				if ( function_exists( 'acf_add_options_page' ) ) {
+			function() use ( $array, $is_subpage ) {
+				if ( $is_subpage ) {
+					acf_add_options_sub_page( $array );
+				} else {
 					acf_add_options_page( $array );
 				}
 			}
