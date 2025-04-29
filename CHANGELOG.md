@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.3](https://github.com/squarecandy/squarecandy-common/compare/v1.5.2...v1.5.3) (2025-04-29)
+
+
+### Bug Fixes
+
+* add squarecandy_add_options_page function ([1b86d89](https://github.com/squarecandy/squarecandy-common/commit/1b86d893b754a953b9653c72df93ee2ed97f330d))
+* add subpage option for squarecandy_add_options_page ([51cbaef](https://github.com/squarecandy/squarecandy-common/commit/51cbaef82b6a223be0a1bcca2dc326e302fd1998))
+* back out image sizes fix ([a0f6db8](https://github.com/squarecandy/squarecandy-common/commit/a0f6db8f4cf48695b1c3624155e16f366735f369))
+
 ### [1.5.2] (2025-03-26)
 
 ### Bug Fixes
