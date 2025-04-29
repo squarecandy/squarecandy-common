@@ -39,4 +39,3 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * update stylelint rules
-
