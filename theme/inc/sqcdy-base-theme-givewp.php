@@ -51,8 +51,7 @@ if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
 			give_set_error( 'gateway_invalid', __( 'Something went wrong. We were not able to detect a selected payment gateway. Please contact customer support for assistance.', 'give' ) );
 		}
 
-		// check for a valid nonce
-		// (confirms that javascript is enabled and enforces one submission per page load)
+		// Confirm javascript is enabled
 		$jscheck = $data['givewp_js_test'] ?? false;
 		// throw an error if the jscheck value is not today's date.
 		// also check for yesterday in case someone submits immeidately after midnight
@@ -60,7 +59,7 @@ if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
 			// show the user an error message
 			give_set_error( 'jscheck_invalid', __( 'We were not able to verify your submission. Please ensure you are using a browser with javascript enabled - it is required for the functionality of this donation form. If you are still having trouble, please contact customer support for assistance.', 'give' ) );
 			// log the error
-			give_record_log( 'Invalid Nonce (Square Candy Security Check)', $data, 0, 'error' );
+			give_record_log( 'Invalid JS check (Square Candy Security Check)', $data, 0, 'error' );
 		}
 
 		return $valid_data;
@@ -79,7 +78,7 @@ endif;
 // load the js check value into the hidden field
 if ( ! function_exists( 'give_squarecandy_jscheck_footer_script' ) ) :
 	function give_squarecandy_jscheck_footer_script() {
-		// generate wp nonce
+		// generate date to check against
 		$jscheck = wp_date( 'Ymd' );
 		?>
 		<script type="text/javascript">
