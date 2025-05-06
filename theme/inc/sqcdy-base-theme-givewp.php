@@ -53,10 +53,12 @@ if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
 
 		// check for a valid nonce
 		// (confirms that javascript is enabled and enforces one submission per page load)
-		$nonce = $data['givewp_js_test'] ?? false;
-		if ( ! wp_verify_nonce( $nonce, 'give-js-test-nonce' ) ) {
+		$jscheck = $data['givewp_js_test'] ?? false;
+		// throw an error if the jscheck value is not today's date.
+		// also check for yesterday in case someone submits immeidately after midnight
+		if ( (int) wp_date( 'Ymd' ) !== (int) $jscheck && ( (int) wp_date( 'Ymd' ) - 1 ) !== (int) $jscheck ) {
 			// show the user an error message
-			give_set_error( 'nonce_invalid', __( 'We were not able to verify your submission. Please ensure you are using a browser with javascript enabled - it is required for the functionality of this donation form. If you are still having trouble, please contact customer support for assistance. [Error: GWP45 - invalid nonce]', 'give' ) );
+			give_set_error( 'jscheck_invalid', __( 'We were not able to verify your submission. Please ensure you are using a browser with javascript enabled - it is required for the functionality of this donation form. If you are still having trouble, please contact customer support for assistance.', 'give' ) );
 			// log the error
 			give_record_log( 'Invalid Nonce (Square Candy Security Check)', $data, 0, 'error' );
 		}
@@ -66,39 +68,30 @@ if ( ! function_exists( 'give_squarecandy_validate_submission' ) ) :
 	add_action( 'give_checkout_error_checks', 'give_squarecandy_validate_submission', 10, 2 );
 endif;
 
-// create a new hidden field for the nonce
-if ( ! function_exists( 'give_squarecandy_add_hidden_nonce_field' ) ) :
-	add_action( 'give_fields_payment_mode_before_gateways', 'give_squarecandy_add_hidden_nonce_field', 10, 1 );
-	function give_squarecandy_add_hidden_nonce_field( $collection ) {
+// create a new hidden field for the js check
+if ( ! function_exists( 'give_squarecandy_add_hidden_jscheck_field' ) ) :
+	add_action( 'give_fields_payment_mode_before_gateways', 'give_squarecandy_add_hidden_jscheck_field', 10, 1 );
+	function give_squarecandy_add_hidden_jscheck_field( $collection ) {
 		$collection->append( give_field( 'hidden', 'givewp_js_test' ) );
 	}
 endif;
 
-// load the nonce value into the hidden field
-if ( ! function_exists( 'give_squarecandy_nonce_footer_script' ) ) :
-	function give_squarecandy_nonce_footer_script() {
+// load the js check value into the hidden field
+if ( ! function_exists( 'give_squarecandy_jscheck_footer_script' ) ) :
+	function give_squarecandy_jscheck_footer_script() {
 		// generate wp nonce
-		$nonce = wp_create_nonce( 'give-js-test-nonce' );
+		$jscheck = wp_date( 'Ymd' );
 		?>
 		<script type="text/javascript">
-			// use javascript to load the nonce into the hidden field with name givewp_js_test
-			document.addEventListener('DOMContentLoaded', function() {
-				// Find the hidden field by name and set the nonce value
-				var nonceField = document.querySelector('input[name="givewp_js_test"]');
-				if (nonceField) {
-					nonceField.value = '<?php echo $nonce; ?>';
-				}
-				setTimeout( function() {
-					var nonceField = document.querySelector('input[name="givewp_js_test"]');
-					if (nonceField) {
-						nonceField.value = '<?php echo $nonce; ?>';
-					}
-				}, 5000 );
-			});
+			// use javascript to load the date value into the hidden field with name givewp_js_test
+			var jsCheck = document.querySelector('input[name="givewp_js_test"]');
+			if (jsCheck) {
+				jsCheck.value = '<?php echo $jscheck; ?>';
+			}
 		</script>
 		<?php
 	}
-	add_action( 'wp_footer', 'give_squarecandy_nonce_footer_script', 9999 );
+	add_action( 'wp_footer', 'give_squarecandy_jscheck_footer_script', 9999 );
 endif;
 
 
