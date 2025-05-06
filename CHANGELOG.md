@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.5](https://github.com/squarecandy/squarecandy-common/compare/v1.5.4...v1.5.5) (2025-05-06)
+
+
+### Bug Fixes
+
+* simplify the GiveWP js check (date instead of nonce) ([1b64d13](https://github.com/squarecandy/squarecandy-common/commit/1b64d13ed150a12ea6781f11f8ac71b62956100d))
+
 ### [1.5.4](https://github.com/squarecandy/squarecandy-common/compare/v1.5.3...v1.5.4) (2025-04-30)
 
 ### [1.5.3](https://github.com/squarecandy/squarecandy-common/compare/v1.5.2...v1.5.3) (2025-04-29)
