@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.6](https://github.com/squarecandy/squarecandy-common/compare/v1.5.5...v1.5.6) (2025-05-06)
+
+
+### Bug Fixes
+
+* better comments and logging ([1fdd30b](https://github.com/squarecandy/squarecandy-common/commit/1fdd30b38e162cdc41a61876f95a6e53e0cdfc9b))
+
 ### [1.5.5](https://github.com/squarecandy/squarecandy-common/compare/v1.5.4...v1.5.5) (2025-05-06)
 
 
