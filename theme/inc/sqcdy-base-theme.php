@@ -252,3 +252,27 @@ if ( ! function_exists( 'squarecandy_staging_blogname' ) ) :
 endif;
 
 require_once 'sqcdy-base-theme-givewp.php';
+
+// intercept calls to api.wordpress.org/core/browse-happy in wp_check_browser_version()
+// and api.wordpress.org/core/serve-happy in wp_check_php_version()
+// ... and any other *-happy shenanigans that get added in the future.
+if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
+	add_filter( 'pre_http_request', 'squarecandy_stop_wordpress_org_api_calls', 10, 3 );
+	function squarecandy_stop_wordpress_org_api_calls( $ret, array $request, string $url ) {
+		if ( preg_match( '!^https?://api\.wordpress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+
+			// set the same transient as wp_check_browser_version() does so it stops checking.
+			$key = md5( $_SERVER['HTTP_USER_AGENT'] );
+			set_site_transient( 'browser_' . $key, array(), YEAR_IN_SECONDS * 100 ); // set for absurd far future date so it doesn't check again
+
+			// set the same transient as wp_check_php_version() does so it stops checking.
+			$version = PHP_VERSION;
+			$key     = md5( $version );
+			set_site_transient( 'php_check_' . $key, array(), YEAR_IN_SECONDS * 100 ); // set for absurd far future date so it doesn't check again
+
+			return new WP_Error( 'stop_wordpress_org_api_calls', sprintf( 'Request to %s was blocked. We will check again in 100 years!', $url ) );
+		}
+
+		return $ret;
+	}
+endif;
