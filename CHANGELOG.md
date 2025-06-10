@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/squarecandy/squarecandy-common/compare/v1.5.6...v1.6.0) (2025-06-10)
+
+
+### Features
+
+* thwart unnecessary calls to api.wordpress.org/core ([a82b8b2](https://github.com/squarecandy/squarecandy-common/commit/a82b8b20644f696db030844628a8a9391f8dfd19))
+
 ### [1.5.6](https://github.com/squarecandy/squarecandy-common/compare/v1.5.5...v1.5.6) (2025-05-06)
 
 
