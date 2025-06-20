@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/squarecandy/squarecandy-common/compare/v1.6.0...v1.6.1) (2025-06-20)
+
+
+### Bug Fixes
+
+* disable speculative loading rules introduced in WP 6.5 ([dc87d5c](https://github.com/squarecandy/squarecandy-common/commit/dc87d5c7904948476f12e7357085e7eaa76107ef))
+* remove contain-intrinsic-size output from WP Core ([8530ceb](https://github.com/squarecandy/squarecandy-common/commit/8530cebae2ae16d071c4f736a015a1a1d70f1fa7))
+
+### [1.5.7](https://github.com/squarecandy/squarecandy-common/compare/v1.5.6...v1.5.7) (2025-05-29)
+
+
+### Bug Fixes
+
+* wrap prev/next text in span, add filter ([2a14ace](https://github.com/squarecandy/squarecandy-common/commit/2a14ace9a0aff020124629b8d2d34605cd579ed6))
+
 ## [1.6.0](https://github.com/squarecandy/squarecandy-common/compare/v1.5.6...v1.6.0) (2025-06-10)
 
 
