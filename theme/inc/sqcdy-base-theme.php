@@ -279,3 +279,12 @@ endif;
 
 // remove the contain-intrinsic-size: 3000px 1500px declaration forced into WP Core <head> output
 remove_action( 'wp_head', 'wp_print_auto_sizes_contain_css_fix', 1 );
+
+// completely disable speculative loading rules introduced in WP 6.5
+add_filter(
+	'wp_speculation_rules_configuration',
+	function ( $config ) {
+		// Returning null disables all speculative loading rules.
+		return null;
+	}
+);
