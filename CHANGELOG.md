@@ -9,6 +9,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 * thwart unnecessary calls to api.wordpress.org/core ([a82b8b2](https://github.com/squarecandy/squarecandy-common/commit/a82b8b20644f696db030844628a8a9391f8dfd19))
 
+### [1.5.7](https://github.com/squarecandy/squarecandy-common/compare/v1.5.4...v1.5.7) (2025-05-29)
+
+
+### Bug Fixes
+
+* better comments and logging ([1fdd30b](https://github.com/squarecandy/squarecandy-common/commit/1fdd30b38e162cdc41a61876f95a6e53e0cdfc9b))
+* simplify the GiveWP js check (date instead of nonce) ([1b64d13](https://github.com/squarecandy/squarecandy-common/commit/1b64d13ed150a12ea6781f11f8ac71b62956100d))
+* wrap prev/next text in span, add filter ([2a14ace](https://github.com/squarecandy/squarecandy-common/commit/2a14ace9a0aff020124629b8d2d34605cd579ed6))
+
 ### [1.5.6](https://github.com/squarecandy/squarecandy-common/compare/v1.5.5...v1.5.6) (2025-05-06)
 
 
