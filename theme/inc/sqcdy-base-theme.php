@@ -276,3 +276,6 @@ if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
 		return $ret;
 	}
 endif;
+
+// remove the contain-intrinsic-size: 3000px 1500px declaration forced into WP Core <head> output
+remove_action( 'wp_head', 'wp_print_auto_sizes_contain_css_fix', 1 );
