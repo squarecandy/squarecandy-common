@@ -284,3 +284,28 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 		}
 	endif;
 endif; // end GiveWP
+
+
+// Workaround to be able to create Campaigns with zero goal
+add_action( 'admin_enqueue_scripts', 'squarecandy_givewp_campaign_workaround' );
+function squarecandy_givewp_campaign_workaround() {
+	$screen = get_current_screen();
+	if ( 'give_forms_page_give-campaigns' === $screen->base ) {
+		// use jQuery one to launch our script once the Add a campaign modal is open & changed the first time (i.e. adding a title)
+		// then watch the form and when we're on the donation amount page, enable the "continue" button
+		$script = "jQuery(document).one('change','.givewp-modal-wrapper',function(){
+			const observer = new MutationObserver(() => {
+				if( jQuery('button.dy7naL1zW7YbFkcE67R9').length ){
+					const continueButton = jQuery('.givewp-modal-wrapper .givewp-campaigns__form button[type=submit]');
+					continueButton.attr('disabled',false);
+					continueButton.removeClass('disabled');
+				}
+			});
+			observer.observe(document.querySelector('.givewp-modal-wrapper .givewp-campaigns__form'), {
+			  subtree: true,
+			  childList: true,
+			});
+		});";
+		wp_add_inline_script( 'jquery', $script, 'before' ); //requires jquery
+	}
+};
