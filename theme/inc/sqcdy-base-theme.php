@@ -174,6 +174,12 @@ if ( ! function_exists( 'squarecandy_add_slug_to_body_class' ) ) :
 			$classes[] = 'hfeed';
 			$classes[] = 'not-single';
 		}
+
+		// Views2 body class
+		if ( sqcdy_is_views2( 'squarecandy' ) ) {
+			$classes[] = 'sqcdy-views2';
+		}
+
 		return $classes;
 	}
 	add_filter( 'body_class', 'squarecandy_add_slug_to_body_class' );
