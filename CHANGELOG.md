@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/squarecandy/squarecandy-common/compare/v1.6.1...v1.6.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* add sqcdy-views2 body class ([c5cb890](https://github.com/squarecandy/squarecandy-common/commit/c5cb8900a37f2866fd0f2c07c426a4e6ec0e5b00))
+* GiveWP workaround to allow zero campaign goals ([7e5b735](https://github.com/squarecandy/squarecandy-common/commit/7e5b735a13d500f0d122b37162a2e238524e328e))
+
 ### [1.6.1](https://github.com/squarecandy/squarecandy-common/compare/v1.6.0...v1.6.1) (2025-06-20)
 
 
