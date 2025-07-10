@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.3](https://github.com/squarecandy/squarecandy-common/compare/v1.6.2...v1.6.3) (2025-07-10)
+
+
+### Bug Fixes
+
+* undisable button even if form is closed then reopened ([122ac32](https://github.com/squarecandy/squarecandy-common/commit/122ac32e551d73b1b5acb9de6f415cd28fa99b03))
+
 ### [1.6.2](https://github.com/squarecandy/squarecandy-common/compare/v1.6.1...v1.6.2) (2025-07-10)
 
 
