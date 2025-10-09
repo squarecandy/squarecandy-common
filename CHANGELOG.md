@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/squarecandy/squarecandy-common/compare/v1.6.3...v1.7.0) (2025-10-09)
+
+
+### Features
+
+* use the branch slug in grunt bump ([b77a589](https://github.com/squarecandy/squarecandy-common/commit/b77a589cbc25ccbb4b86c3e9fe685a78b3147cd4))
+
 ### [1.6.3](https://github.com/squarecandy/squarecandy-common/compare/v1.6.2...v1.6.3) (2025-07-10)
 
 
