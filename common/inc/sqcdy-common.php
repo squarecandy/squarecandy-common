@@ -257,3 +257,19 @@ if ( ! function_exists( 'squarecandy_add_options_page' ) ) :
 		);
 	}
 endif;
+
+if ( ! function_exists( 'is_acf_fontawesome_plugin_active' ) ) {
+	function is_acf_fontawesome_plugin_active() {
+		if (
+			class_exists( 'acf_field_font_awesome' ) ||
+			in_array(
+				'advanced-custom-fields-font-awesome/acf-font-awesome.php',
+				(array) get_option( 'active_plugins', array() ),
+				true
+			)
+		) {
+			return true;
+		}
+		return false;
+	}
+}
