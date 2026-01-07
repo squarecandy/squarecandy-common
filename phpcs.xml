@@ -162,4 +162,12 @@
 	<!-- Check for single blank line after namespace declaration. -->
 	<rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
 
+	<!-- https://github.com/PHPCompatibility/PHPCompatibility -->
+
+	<!-- Run against the PHPCompatibility ruleset -->
+	<rule ref="PHPCompatibility"/>
+
+	<!-- Check within range 7.4 and up. -->
+	<config name="testVersion" value="7.4-"/>
+
 </ruleset>
