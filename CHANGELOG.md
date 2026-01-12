@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/squarecandy/squarecandy-common/compare/v1.7.0...v1.7.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* add git updater ignore for woocommerce name your price plugin ([e6d3fd6](https://github.com/squarecandy/squarecandy-common/commit/e6d3fd623b82a55d911d9c755f89cd935f401249))
+* add is_acf_fontawesome_plugin_active function ([e885efd](https://github.com/squarecandy/squarecandy-common/commit/e885efdf9bfcbea57cde740e57d43e547c4a05e6))
+
+## [1.7.0](https://github.com/squarecandy/squarecandy-common/compare/v1.6.3...v1.7.0) (2025-10-09)
+
+
+### Features
+
+* use the branch slug in grunt bump ([b77a589](https://github.com/squarecandy/squarecandy-common/commit/b77a589cbc25ccbb4b86c3e9fe685a78b3147cd4))
+
 ### [1.6.3](https://github.com/squarecandy/squarecandy-common/compare/v1.6.2...v1.6.3) (2025-07-10)
 
 
