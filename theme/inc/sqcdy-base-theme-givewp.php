@@ -155,7 +155,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 		}
 	endif;
 
-	// GIVEWP - ADD AN ANONYMOUS DONATION FILTER TO	LIST VIEW
+	// GIVEWP - ADD AN ANONYMOUS DONATION FILTER TO LIST VIEW
 
 	/**
 	 * Payments View.
@@ -264,7 +264,7 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 
 	if ( ! function_exists( 'squarecandy_give_payments_table_columns' ) ) :
 		add_filter( 'give_payments_table_columns', 'squarecandy_give_payments_table_columns' );
-		// GIVEWP - ADD AN ANONYMOUS DONATION COLUMN TO	LIST VIEW
+		// GIVEWP - ADD AN ANONYMOUS DONATION COLUMN TO LIST VIEW
 		function squarecandy_give_payments_table_columns( $columns ) {
 			$details                       = array_pop( $columns );
 			$columns['anonymous_donation'] = __( 'Anonymous', 'give' );
@@ -316,4 +316,4 @@ function squarecandy_givewp_campaign_workaround() {
 		});";
 		wp_add_inline_script( 'jquery', $script, 'before' ); //requires jquery
 	}
-};
+}

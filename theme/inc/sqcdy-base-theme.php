@@ -132,7 +132,7 @@ if ( function_exists( 'seopress_init' ) ) :
 				}
 			}
 			return $title;
-		};
+		}
 
 	endif;
 
@@ -144,6 +144,8 @@ endif;
 if ( class_exists( 'Fragen\Git_Updater\Ignore' ) ) :
 	new Fragen\Git_Updater\Ignore( 'redis-cache', 'redis-cache/redis-cache.php' );
 	new Fragen\Git_Updater\Ignore( 'woocommerce-subscriptions-gifting', 'woocommerce-subscriptions-gifting/woocommerce-subscriptions-gifting.php' );
+	new Fragen\Git_Updater\Ignore( 'woocommerce-name-your-price', 'woocommerce-name-your-price/woocommerce-name-your-price.php' );
+	new Fragen\Git_Updater\Ignore( 'woocommerce-mix-and-match-products', 'woocommerce-name-your-price/woocommerce-name-your-price.php' ); //they have incorrect file in their header
 endif;
 
 
@@ -265,7 +267,7 @@ require_once 'sqcdy-base-theme-givewp.php';
 if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
 	add_filter( 'pre_http_request', 'squarecandy_stop_wordpress_org_api_calls', 10, 3 );
 	function squarecandy_stop_wordpress_org_api_calls( $ret, array $request, string $url ) {
-		if ( preg_match( '!^https?://api\.wordpress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		if ( preg_match( '!^https?://api\.wordpress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
 
 			// set the same transient as wp_check_browser_version() does so it stops checking.
 			$key = md5( $_SERVER['HTTP_USER_AGENT'] );
