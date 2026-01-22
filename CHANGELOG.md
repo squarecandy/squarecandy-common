@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/squarecandy/squarecandy-common/compare/v1.8.0...v1.9.0) (2026-01-22)
+
+
+### Features
+
+* add automated creation of releases on github ([b98121e](https://github.com/squarecandy/squarecandy-common/commit/b98121efb9ad4b8bc1768e042b4b61b6f657a5dd))
+
 ## [1.8.0](https://github.com/squarecandy/squarecandy-common/compare/v1.7.1...v1.8.0) (2026-01-22)
 
 
