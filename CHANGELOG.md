@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/squarecandy/squarecandy-common/compare/v1.7.1...v1.8.0) (2026-01-22)
+
+
+### Features
+
+* Update WP Coding Standards to 3.x ([621092b](https://github.com/squarecandy/squarecandy-common/commit/621092bde2625c742aecd01edd6f57736c9d493d))
+
+
+### Bug Fixes
+
+* depreciated rules ([4a77042](https://github.com/squarecandy/squarecandy-common/commit/4a770420ae91b5f55bd7367adb131473c04bc702))
+* generic starting version for starter file ([aaa0b15](https://github.com/squarecandy/squarecandy-common/commit/aaa0b1559c44cb9cdba048777092d8f1e10c471e))
+* restore deleted sniffs with updated names ([97a3912](https://github.com/squarecandy/squarecandy-common/commit/97a3912f683c12d0940fe45d35c0b4a395f1b78a))
+* restore phpcompatibility check ([d8deb72](https://github.com/squarecandy/squarecandy-common/commit/d8deb722ae61921617fb53bcd069de45a7e7e0ad))
+* update the phpcs copy that gets deployed too! ([e4d84cb](https://github.com/squarecandy/squarecandy-common/commit/e4d84cb8cd997a14fc11122c7fcba7fb7f6e28a3))
+
 ### [1.7.1](https://github.com/squarecandy/squarecandy-common/compare/v1.7.0...v1.7.1) (2025-11-24)
 
 
