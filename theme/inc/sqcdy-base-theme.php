@@ -136,6 +136,24 @@ if ( function_exists( 'seopress_init' ) ) :
 
 	endif;
 
+	// SEOPress Redirections
+	if ( ! function_exists( 'squarecandy_seopress_metabox_seo_tabs' ) ) :
+		//remove seopress redirections tab from edit post metabox (nb if we use block editor will need to do this again somewhere else?)
+		add_filter( 'seopress_metabox_seo_tabs', 'squarecandy_seopress_metabox_seo_tabs' );
+		function squarecandy_seopress_metabox_seo_tabs( $seo_tabs ) {
+			unset( $seo_tabs['redirect-tab'] );
+			return $seo_tabs;
+		}
+	endif;
+
+	if ( ! function_exists( 'squarecandy_seopress_redirections_hook' ) ) :
+		//prevent seopress redirections from running
+		add_action( 'wp', 'squarecandy_seopress_redirections_hook', 1 );
+		function squarecandy_seopress_redirections_hook() {
+			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 ); // seopress redirections hook
+		}
+	endif;
+
 endif;
 
 
@@ -267,7 +285,7 @@ require_once 'sqcdy-base-theme-givewp.php';
 if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
 	add_filter( 'pre_http_request', 'squarecandy_stop_wordpress_org_api_calls', 10, 3 );
 	function squarecandy_stop_wordpress_org_api_calls( $ret, array $request, string $url ) {
-		if ( preg_match( '!^https?://api\.wordpress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		if ( preg_match( '!^https?://api\.WordPress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
 
 			// set the same transient as wp_check_browser_version() does so it stops checking.
 			$key = md5( $_SERVER['HTTP_USER_AGENT'] );
