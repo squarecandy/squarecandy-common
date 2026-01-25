@@ -180,7 +180,6 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 			// bc of the way give sets up their existing filter links, they can end up with ?anonymous_donation in them too, so filter that out
 			if ( '1' === $current ) {
 				foreach ( $views as $key => $url ) {
-					sqcdy_log( $url, 'views ' . $key );
 					$views[ $key ] = str_replace( '&#038;anonymous_donation=1', '', $url );
 				}
 			}
@@ -249,7 +248,6 @@ if ( class_exists( 'Give\Donations\DonationsAdminPage' ) ) :
 	if ( ! function_exists( 'squarecandy_give_recurring_payment_table_payments_query' ) ) :
 		add_filter( 'give_payment_table_payments_query', 'squarecandy_give_recurring_payment_table_payments_query' );
 		function squarecandy_give_recurring_payment_table_payments_query( $args ) {
-			sqcdy_log( $args, 'luna_give_recurring_payment_table_payments_query' );
 			if ( ! empty( $_GET['anonymous_donation'] ) && '1' === give_clean( $_GET['anonymous_donation'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$args['meta_query'] = array(
 					array(
