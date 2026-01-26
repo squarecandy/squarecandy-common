@@ -1,22 +1,5 @@
 {
-	"name": "squarecandy-REPLACEME",
-	"version": "0.0.1",
-	"description": "DESCRIPTION REPLACEME",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/squarecandy/squarecandy-REPLACEME.git"
-	},
-	"author": "Square Candy Design / Peter Wise",
-	"license": "UNLICENSED",
-	"bugs": {
-		"url": "https://github.com/squarecandy/squarecandy-REPLACEME/issues"
-	},
-	"browserslist": [
-		"last 2 version",
-		"> 1%",
-		"maintained node versions",
-		"not dead"
-	],
+	"version": "0.0.2",
 	"scripts": {
 		"release": "standard-version"
 	},
