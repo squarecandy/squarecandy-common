@@ -1,9 +1,10 @@
 # squarecandy-common
+
 Common files shared between themes and plugins. Let's track and edit them in one place!
 
 *Note: do not run `npm install` or `composer install` on this repo! Copy the files to your project repo and do the install there.*
 
-----------
+---
 
 ## file structure
 
@@ -13,6 +14,64 @@ Files in the `plugin` and `theme` directory should be copied - as appropirate - 
 
 Files in the `starter` directory are for reference. You can manually copy and modify these files or just use them as a reference point. Each project's needs are going to be unique enough that we can't standardize these globally... however, we should strive to maintain as much consistency as possible - espeically in the linting features.
 
+## upgrade notes - Jan 2026
+
+### Recommended Node Version
+
+New systems work best with node 24 / npm 11
+
+```bash
+brew install nvm
+nvm install 24
+nvm use 24
+```
+
+### Major dependency upgrades
+
+* eslint-plugin 5 → 24
+* scripts 23 → 31
+* stylelint-config 20 → 23
+* autoprefixer 9 → 10
+* grunt 1.5 → 1.6
+* grunt-eslint 22 → 26
+* grunt-modernizr 3 → 5
+* stylelint 14 → 16 with all related configs/systems updated
+* terser 4→5
+
+### npm config
+
+The `.npmrc` file was added to help cleanup unavoidable "bad engine" warnings in the output
+
+### ESLint config file upgrade
+
+The new versions of eslint require a new config file format, provided in the new file `eslint.config.js`
+
+The old files (`.eslintignore` and `.eslintrc`) should be deleted in all projects when this update is implemented
+
+### Browser List Updates
+
+The settings for supported browsers have been moved out of `package.json` and into `.browserslistrc`
+
+The list of browsers has also been tweaked to match our client needs and geography and agency browser support policies better:
+
+* Goes slightly further back by default ("last 7 versions")
+* Sets support for older versions of Safari and iOS (users tend to get locked into older versions and can't update due to hardware or major version OS issues)
+* Explicity opts out of support for browsers above 0.5% globally, but not popular in North America: KaiOS, Opera Mini, Opera Mobile, Opera, QQ Browser, UC Browser
+
+### Simplified package.json
+
+Removed project specific metadata from the `package.json` file. We're only using npm for development purposes. The info such as name, description, author, licence, etc. is already duplicated in other places in our WP themes and plugins.
+
+### Removed Dependencies
+
+* `pixrem` has been removed now that 'rem' units have very good support and IE support requirement is gone.
+* `prettier` library had a lot of overlap and conflicts with the newest versions of `eslint`. It's been removed in favor of just using `eslint`. The configuration has been setup to minimize changes to legacy Square Candy custom js files.
+
+### Version Pinning
+
+* Changed from `^` (caret) to exact versions in `package.json` for better reproducibility. This allows running `npm update` to grab new versions of squarecandy-common, for example, without inadvertently breaking other build tools with complex dependency relationships.
+* Security concerns are minimal since we don't deploy `node_modules`
+* We should update the entire system more frequently with this pattern. New fully compatible sets of exact version numbers should be setup in `squarecandy-common` and then deployed to all project so everything is identical.
 
 ## upgrade notes - May 2022
 
@@ -24,14 +83,14 @@ The following are notes on non-standard upgrade paths that are required for spec
 
 ### grunt-postcss
 
-The main `grunt-postcss` pacakge is abandoned. We are now using this fork: `@lodder/grunt-postcss` 
+The main `grunt-postcss` pacakge is abandoned. We are now using this fork: `@lodder/grunt-postcss`
 
 ### sass
 
 The `node-sass` package - while still technically receiving maintenance/security updates - is basically abandoned and the whole Sass community is focused on Dart Sass. We are migrating any existing projects that used `node-sass` to use the `sass` (which is the npm slug for the Dart Sass package).
 
 One unfortunate side-effect of this change is that `grunt-sass` when combined with Dart Sass seems to create css map files with absolute local file URLs. Relative URLs would be much better. We are still looking a solution for this issue:
-https://github.com/sindresorhus/grunt-sass/issues/299 
+https://github.com/sindresorhus/grunt-sass/issues/299
 
 ### WordPress packages
 
@@ -63,8 +122,5 @@ To get the 1.x version of the VSCode Stylelint extension https://github.com/styl
 in your global vscode `settings.json` file, set `"stylelint.config": null,`
 (as per: https://stackoverflow.com/a/69149059/947370 )
 
-in the local repo there should now already be a `.vscode/settings.json` and `.vscode/extensions.json` files. 
+in the local repo there should now already be a `.vscode/settings.json` and `.vscode/extensions.json` files.
 ( You shouldn’t need to add anything new once the repo is updated, but double check as per here: https://stackoverflow.com/a/71817658/947370 )
-
-
-
