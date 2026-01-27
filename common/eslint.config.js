@@ -9,6 +9,9 @@ module.exports = [
 		plugins: {
 			'@wordpress': wpPlugin,
 		},
+		linterOptions: {
+			reportUnusedDisableDirectives: false,
+		},
 		languageOptions: {
 			globals: {
 				...globals.browser,
@@ -28,6 +31,8 @@ module.exports = [
 			'newline-per-chained-call': [ 'error', { ignoreChainWithDepth: 2 } ],
 			'dot-location': [ 'error', 'property' ],
 			'prettier/prettier': 'off',
+			'no-console': 'warn',
+			'camelcase': 'warn',
 		},
 	},
 ];
