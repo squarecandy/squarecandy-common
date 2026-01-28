@@ -183,6 +183,10 @@ module.exports = function( grunt ) {
 				cmd: 'npm',
 				args: [ 'run', 'release', '--', '--prerelease', branch, '--skip.tag', '--skip.changelog' ],
 			},
+			update: {
+				cmd: 'npm',
+				args: [ 'update' ]
+			},
 			ding: {
 				cmd: 'tput',
 				args: [ 'bel' ],
@@ -234,7 +238,8 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-string-replace' );
 
 	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
-	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'copy:preflight', 'modernizr', 'terser', 'string-replace' ] );
+	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
+	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'modernizr', 'terser', 'string-replace' ] );
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
 	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump', 'run:ding' ] );
