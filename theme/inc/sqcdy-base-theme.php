@@ -285,7 +285,7 @@ require_once 'sqcdy-base-theme-givewp.php';
 if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
 	add_filter( 'pre_http_request', 'squarecandy_stop_wordpress_org_api_calls', 10, 3 );
 	function squarecandy_stop_wordpress_org_api_calls( $ret, array $request, string $url ) {
-		if ( preg_match( '!^https?://api\.WordPress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		if ( preg_match( '!^https?://api\.wordpress\.org/core/.*-happy/!i', $url ) ) { // phpcs:ignore WordPress.WP.CapitalPDangit
 
 			// set the same transient as wp_check_browser_version() does so it stops checking.
 			$key = md5( $_SERVER['HTTP_USER_AGENT'] );
