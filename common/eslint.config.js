@@ -27,7 +27,7 @@ module.exports = [
 			'array-bracket-spacing': [ 'error', 'always' ],
 			'computed-property-spacing': [ 'error', 'always' ],
 			'space-before-function-paren': [ 'error', 'never' ],
-			'space-unary-ops': [ 'error', { words: true, nonwords: true } ],
+			'space-unary-ops': [ 'error', { words: true, nonwords: false, overrides: { '!': true } } ],
 			'newline-per-chained-call': [ 'error', { ignoreChainWithDepth: 2 } ],
 			'dot-location': [ 'error', 'property' ],
 			'prettier/prettier': 'off',
