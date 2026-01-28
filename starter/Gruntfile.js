@@ -27,8 +27,14 @@ module.exports = function( grunt ) {
 			options: {
 				map: true, // inline sourcemaps
 				processors: [
-					require( 'autoprefixer' )( { grid: 'autoreplace' } ), // add vendor prefixes
-					require( 'cssnano' )(), // minify the result
+					// add vendor prefixes
+					require( 'autoprefixer' )( { grid: 'autoreplace' } ),
+					// minify the result
+					require( 'cssnano' )( {
+						preset: [ 'default', {
+							colormin: false, // Disable color optimization completely. Shortening is mostly handled by stylelint already.
+						} ],
+					} ),
 				],
 			},
 			dist: {
