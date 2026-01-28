@@ -5,6 +5,16 @@ module.exports = function( grunt ) {
 		.trim()
 		.split( '/' )
 		.pop();
+	const phpPaths = [
+		'*.php',
+		'inc/*.php',
+		'template-parts/*.php',
+		'taxonomies/*.php',
+		'post-types/*.php',
+		'woocommerce/*.php',
+		'woocommerce/**/*.php',
+		'give/*.php',
+	].join( ' ' );
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		sass: {
@@ -150,15 +160,6 @@ module.exports = function( grunt ) {
 				],
 			},
 		},
-		phpcs: {
-			application: {
-				src: [ '*.php', 'inc/*.php', 'template-parts/*.php', 'post-types/*.php', 'taxonomies/*.php' ],
-			},
-			options: {
-				bin: './vendor/squizlabs/php_codesniffer/bin/phpcs',
-				standard: 'phpcs.xml',
-			},
-		},
 		stylelint: {
 			src: [ 'css/*.scss', 'css/**/*.scss', 'css/*.css' ],
 		},
@@ -178,6 +179,25 @@ module.exports = function( grunt ) {
 			eslintfix: {
 				cmd: 'npx',
 				args: [ 'eslint', 'js/*.js', 'Gruntfile.js', '--fix' ],
+			},
+			phpcs: {
+				cmd: 'bash',
+				args: [
+					'-c',
+					'./vendor/squizlabs/php_codesniffer/bin/phpcs ' +
+					'--standard=phpcs.xml ' +
+					'--runtime-set ignore_warnings_on_exit 1 ' +
+					phpPaths,
+				],
+			},
+			phpcbf: {
+				cmd: 'bash',
+				args: [
+					'-c',
+					'./vendor/squizlabs/php_codesniffer/bin/phpcbf ' +
+					'--standard=phpcs.xml ' +
+					phpPaths + ' || true',
+				],
 			},
 			bump: {
 				cmd: 'npm',
@@ -240,7 +260,9 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
 	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'modernizr', 'terser', 'string-replace' ] );
-	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'phpcs' ] );
+	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'run:phpcs' ] );
+	grunt.registerTask( 'phpfix', [ 'run:phpcbf' ] );
+	grunt.registerTask( 'fix', [ 'run:stylelintfix', 'run:eslintfix', 'run:phpcbf' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
 	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump', 'run:ding' ] );
 };
