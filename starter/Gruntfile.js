@@ -258,9 +258,18 @@ module.exports = function( grunt ) {
 				},
 			},
 		},
+		gitnewer: {
+			checkForNewFiles: {
+				options: {
+					override: function( details, include ) {
+						include( true );
+					},
+				},
+			},
+		},
 		checkForNewFiles: {
 			src: {
-				src: [ '*.*' ],
+				src: [ '**/*.*', '*.*' ],
 			},
 		},
 	} );
