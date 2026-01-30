@@ -23,6 +23,7 @@
 		"grunt-contrib-copy": "1.0.0",
 		"grunt-contrib-watch": "1.1.0",
 		"grunt-eslint": "26.0.0",
+		"grunt-gitnewer": "1.0.5",
 		"grunt-phpcs": "github:gotcha9999/grunt-phpcs#master",
 		"grunt-modernizr": "5.0.2",
 		"grunt-run": "0.8.1",

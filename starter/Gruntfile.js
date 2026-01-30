@@ -14,7 +14,7 @@ module.exports = function( grunt ) {
 		'woocommerce/*.php',
 		'woocommerce/**/*.php',
 		'give/*.php',
-	].join( ' ' );
+	].join( ' ' ); // Non-existent directories will throw errors. for recursive inclusion, add just the directory like 'my-directory/',
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		sass: {
@@ -43,7 +43,6 @@ module.exports = function( grunt ) {
 					require( 'cssnano' )( {
 						preset: [ 'default', {
 							colormin: false, // Disable color optimization completely. Shortening is mostly handled by stylelint already.
-							calc: false, // Disable calc optimization to avoid Sass variable errors
 						} ],
 					} ),
 				],
@@ -71,6 +70,21 @@ module.exports = function( grunt ) {
 							// default for all other files
 							return dest + matchedSrcPath;
 						},
+						// We are removing .eslintignore & .eslintrc, copy over these files if they exist
+					    filter: function (filepath) {
+					    	if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
+					    		// get the dest path of the file
+					    		const basePath = filepath.replace( this.cwd + '/', '' );
+					    		// check whether the file exists, if it does, copy over it, but if not, don't re-add it
+					    		const fileExists = grunt.file.exists(basePath);
+					    		if ( fileExists ) {
+					    			grunt.log.writeln( basePath + ' should be deleted.');
+					    		}					    		
+					    		return fileExists;
+					    	} else {
+					    		return true;
+					    	}
+					    },
 					},
 					{
 						expand: true,
@@ -175,7 +189,7 @@ module.exports = function( grunt ) {
 		run: {
 			stylelintfix: {
 				cmd: 'npx',
-				args: [ 'stylelint', 'css/*.scss', '--fix' ],
+				args: [ 'stylelint', 'css/*.scss', 'css/**/*.scss', '--fix' ],
 			},
 			eslintfix: {
 				cmd: 'npx',
@@ -215,7 +229,7 @@ module.exports = function( grunt ) {
 		},
 		watch: {
 			css: {
-				files: [ 'css/*.scss' ],
+				files: [ 'css/*.scss', 'css/**/*.scss' ],
 				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'run:ding' ],
 			},
 			js: {
@@ -244,6 +258,11 @@ module.exports = function( grunt ) {
 				},
 			},
 		},
+		checkForNewFiles: {
+			src: {
+				src: [ '*.*' ],
+			},
+		},
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
@@ -257,6 +276,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-modernizr' );
 	grunt.loadNpmTasks( 'grunt-run' );
 	grunt.loadNpmTasks( 'grunt-string-replace' );
+	grunt.loadNpmTasks( 'grunt-gitnewer' );
 
 	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
@@ -265,5 +285,21 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'phpfix', [ 'run:phpcbf' ] );
 	grunt.registerTask( 'fix', [ 'run:stylelintfix', 'run:eslintfix', 'run:phpcbf' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
-	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump', 'run:ding' ] );
+	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'shouldBump', 'bump', 'run:ding' ] );
+
+	grunt.registerTask( 'shouldBump', [ 'gitnewer:checkForNewFiles' ] ); // send output of git-newer to checkForNewFiles
+    grunt.registerMultiTask( 'checkForNewFiles', 'Check if files changed that need to be committed before bumping.', function() {
+		const allowedFiles = [
+		'package-lock.json',
+		'package.json',
+		'functions.php',
+		'plugin.php',
+		'readme.txt',
+		]; // files that change with bump
+		this.filesSrc.forEach( function( file ) {
+	        if ( ! allowedFiles.includes( file ) ) {
+	        	grunt.fail.warn( file + ' should be committed before bump. ' ); // abort mission
+	        }
+	    } );
+	} );
 };
