@@ -244,6 +244,11 @@ module.exports = function( grunt ) {
 				},
 			},
 		},
+		checkForNewFiles: {
+			src: {
+				src: [ '*.*' ],
+			},
+		},
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
@@ -257,6 +262,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-modernizr' );
 	grunt.loadNpmTasks( 'grunt-run' );
 	grunt.loadNpmTasks( 'grunt-string-replace' );
+	grunt.loadNpmTasks( 'grunt-gitnewer' );
 
 	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
@@ -265,5 +271,15 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'phpfix', [ 'run:phpcbf' ] );
 	grunt.registerTask( 'fix', [ 'run:stylelintfix', 'run:eslintfix', 'run:phpcbf' ] );
 	grunt.registerTask( 'bump', [ 'run:bump' ] );
-	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'bump', 'run:ding' ] );
+	grunt.registerTask( 'preflight', [ 'compile', 'lint', 'shouldBump', 'bump', 'run:ding' ] );
+
+	grunt.registerTask( 'shouldBump', [ 'gitnewer:checkForNewFiles' ] ); // send output of git-newer to checkForNewFiles
+    grunt.registerMultiTask( 'checkForNewFiles', 'Check if files changed that need to be committed before bumping.', function() {
+		const allowedFiles = [ 'package-lock.json', 'package.json', 'functions.php', 'plugin.php', 'readme.txt', ]; // files that change with bump
+		this.filesSrc.forEach( function( file ) {
+	        if ( ! allowedFiles.includes( file ) ) {
+	        	grunt.fail.warn( file + ' should be committed before bump. ' ); // abort mission
+	        }
+	    } );
+	} );
 };
