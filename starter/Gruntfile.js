@@ -14,7 +14,7 @@ module.exports = function( grunt ) {
 		'woocommerce/*.php',
 		'woocommerce/**/*.php',
 		'give/*.php',
-	].join( ' ' );
+	].join( ' ' ); // Non-existent directories will throw errors. for recursive inclusion, add just the directory like 'my-directory/',
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		sass: {
@@ -190,7 +190,7 @@ module.exports = function( grunt ) {
 		run: {
 			stylelintfix: {
 				cmd: 'npx',
-				args: [ 'stylelint', 'css/*.scss', '--fix' ],
+				args: [ 'stylelint', 'css/*.scss', 'css/**/*.scss', '--fix' ],
 			},
 			eslintfix: {
 				cmd: 'npx',
@@ -230,7 +230,7 @@ module.exports = function( grunt ) {
 		},
 		watch: {
 			css: {
-				files: [ 'css/*.scss' ],
+				files: [ 'css/*.scss', 'css/**/*.scss' ],
 				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'run:ding' ],
 			},
 			js: {
