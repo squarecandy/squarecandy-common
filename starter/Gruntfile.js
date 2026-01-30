@@ -71,6 +71,21 @@ module.exports = function( grunt ) {
 							// default for all other files
 							return dest + matchedSrcPath;
 						},
+						// We are removing .eslintignore & .eslintrc, copy over these files if they exist
+					    filter: function (filepath) {
+					    	if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
+					    		// get the dest path of the file
+					    		const basePath = filepath.replace( this.cwd + '/', '' );
+					    		// check whether the file exists, if it does, copy over it, but if not, don't re-add it
+					    		const fileExists = grunt.file.exists(basePath);
+					    		if ( fileExists ) {
+					    			grunt.log.writeln( basePath + ' should be deleted.');
+					    		}					    		
+					    		return fileExists;
+					    	} else {
+					    		return true;
+					    	}
+					    },
 					},
 					{
 						expand: true,
