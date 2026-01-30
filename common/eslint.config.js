@@ -33,6 +33,8 @@ module.exports = [
 			'prettier/prettier': 'off',
 			'no-console': 'warn',
 			'camelcase': 'warn',
+			'indent': [ 'warn', 'tab', { SwitchCase: 1 } ],
+			'no-mixed-spaces-and-tabs': 'warn',
 		},
 	},
 ];
