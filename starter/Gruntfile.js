@@ -275,7 +275,13 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'shouldBump', [ 'gitnewer:checkForNewFiles' ] ); // send output of git-newer to checkForNewFiles
     grunt.registerMultiTask( 'checkForNewFiles', 'Check if files changed that need to be committed before bumping.', function() {
-		const allowedFiles = [ 'package-lock.json', 'package.json', 'functions.php', 'plugin.php', 'readme.txt', ]; // files that change with bump
+		const allowedFiles = [
+		'package-lock.json',
+		'package.json',
+		'functions.php',
+		'plugin.php',
+		'readme.txt',
+		]; // files that change with bump
 		this.filesSrc.forEach( function( file ) {
 	        if ( ! allowedFiles.includes( file ) ) {
 	        	grunt.fail.warn( file + ' should be committed before bump. ' ); // abort mission
