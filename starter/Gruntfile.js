@@ -1,30 +1,67 @@
 module.exports = function( grunt ) {
 	const sass = require( 'sass' );
+	const settings = grunt.file.readJSON('grunt-options.json');
 	const branch = require( 'child_process' )
 		.execSync( 'git branch --show-current', { encoding: 'utf8' } )
 		.trim()
 		.split( '/' )
 		.pop();
-	const phpPaths = [
-		'*.php',
-		'inc/*.php',
-		'template-parts/*.php',
-		'taxonomies/*.php',
-		'post-types/*.php',
-		'woocommerce/*.php',
-		'woocommerce/**/*.php',
-		'give/*.php',
-	].join( ' ' ); // Non-existent directories will throw errors. for recursive inclusion, add just the directory like 'my-directory/',
+	// calculate what files to copy in
+	const defaultCopyFiles = [
+		// common
+		{
+			expand: true,
+			cwd: 'node_modules/squarecandy-common/common',
+			src: '**/*',
+			dest: '',
+			dot: true,
+			rename( dest, matchedSrcPath ) {
+				// the exact file name .gitignore is reserved by npm
+				// so we track it as /common/gitignore (no dot) and rename on copy
+				if ( matchedSrcPath === 'gitignore' ) {
+					return dest + '.gitignore';
+				}
+				// default for all other files
+				return dest + matchedSrcPath;
+			},
+			// We are removing .eslintignore & .eslintrc, copy over these files if they exist
+		    filter: function( filepath ) {
+		    	if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
+		    		// get the dest path of the file
+		    		const basePath = filepath.replace( this.cwd + '/', '' );
+		    		// check whether the file exists, if it does, copy over it, but if not, don't re-add it
+		    		const fileExists = grunt.file.exists( basePath );
+		    		if ( fileExists ) {
+		    			grunt.log.writeln( basePath + ' should be deleted.' );
+		    		}					    		
+		    		return fileExists;
+		    	} else if ( filepath.includes( 'grunt-options.json' ) ) {
+		    		// get the dest path of the file
+		    		const basePath = filepath.replace( this.cwd + '/', '' );
+		    		// check whether the file exists, if it does, don't copy over it, if it doesn't, add it
+		    		const fileExists = grunt.file.exists( basePath );	    		
+		    		return ! fileExists;
+		    	} else {
+		    		return true;
+		    	}
+		    },
+		},
+		{
+			expand: true,
+			cwd: 'node_modules/squarecandy-common/' + settings.copyType,
+			src: '**/*',
+			dest: '',
+			dot: true,
+		},
+	];
+	const copyFiles = typeof settings.additionalCopyFiles == 'undefined' ? defaultCopyFiles : defaultCopyFiles.concat( settings.additionalCopyFiles );
+	const phpPaths = settings.phpFiles.join( ' ' );
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		sass: {
 			// sass tasks
 			dist: {
-				files: {
-					'dist/css/main.min.css': 'css/main.scss', // this is our main scss file
-					'dist/css/admin.min.css': 'css/admin.scss', // this is admin scss file
-					'dist/css/squarecandy-tinymce-editor-style.min.css': 'css/squarecandy-tinymce-editor-style.scss',
-				},
+				files: settings.sassFiles,
 			},
 			options: {
 				implementation: sass,
@@ -53,85 +90,7 @@ module.exports = function( grunt ) {
 		},
 		copy: {
 			preflight: {
-				files: [
-					// common
-					{
-						expand: true,
-						cwd: 'node_modules/squarecandy-common/common',
-						src: '**/*',
-						dest: '',
-						dot: true,
-						rename( dest, matchedSrcPath ) {
-							// the exact file name .gitignore is reserved by npm
-							// so we track it as /common/gitignore (no dot) and rename on copy
-							if ( matchedSrcPath === 'gitignore' ) {
-								return dest + '.gitignore';
-							}
-							// default for all other files
-							return dest + matchedSrcPath;
-						},
-						// We are removing .eslintignore & .eslintrc, copy over these files if they exist
-					    filter: function (filepath) {
-					    	if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
-					    		// get the dest path of the file
-					    		const basePath = filepath.replace( this.cwd + '/', '' );
-					    		// check whether the file exists, if it does, copy over it, but if not, don't re-add it
-					    		const fileExists = grunt.file.exists(basePath);
-					    		if ( fileExists ) {
-					    			grunt.log.writeln( basePath + ' should be deleted.');
-					    		}					    		
-					    		return fileExists;
-					    	} else {
-					    		return true;
-					    	}
-					    },
-					},
-					{
-						expand: true,
-						cwd: 'node_modules/squarecandy-common/plugin', // choose plugin or theme depending on your project
-						src: '**/*',
-						dest: '',
-						dot: true,
-					},
-					// js
-					{
-						expand: true,
-						cwd: 'node_modules/jquery-cycle2/build',
-						src: 'jquery.cycle2.min.js.map',
-						dest: 'dist/js/vendor',
-					},
-					{
-						expand: true,
-						cwd: 'node_modules/jquery-cycle2/build',
-						src: 'jquery.cycle2.min.js',
-						dest: 'dist/js/vendor',
-					},
-					{
-						expand: true,
-						cwd: 'node_modules/jquery-cycle2/build/plugin',
-						src: 'jquery.cycle2.swipe.min.js',
-						dest: 'dist/js/vendor',
-					},
-					{
-						expand: true,
-						cwd: 'node_modules/jquery-cycle2/build/plugin',
-						src: 'jquery.cycle2.center.min.js',
-						dest: 'dist/js/vendor',
-					},
-					{
-						expand: true,
-						cwd: 'node_modules/magnific-popup/dist',
-						src: 'jquery.magnific-popup.min.js',
-						dest: 'dist/js/vendor',
-					},
-					// css
-					{
-						expand: true,
-						cwd: 'node_modules/magnific-popup/dist',
-						src: 'magnific-popup.css',
-						dest: 'dist/css/vendor',
-					},
-				],
+				files: copyFiles,
 			},
 		},
 		modernizr: {
@@ -289,7 +248,16 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
-	grunt.registerTask( 'compile', [ 'sass', 'postcss', 'modernizr', 'terser', 'string-replace' ] );
+
+	grunt.registerTask( 'compile', 'compile task with optional modernizr', function() {
+	    const beforeTasks = [ 'sass', 'postcss' ];
+	    const afterTasks = [ 'terser', 'string-replace' ];
+	    if ( settings.doModernizr ) {
+	      beforeTasks.push('modernizr');
+	    }
+	    tasks = beforeTasks.concat( afterTasks );
+	    grunt.task.run(tasks);
+	})
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'run:phpcs' ] );
 	grunt.registerTask( 'phpfix', [ 'run:phpcbf' ] );
 	grunt.registerTask( 'fix', [ 'run:stylelintfix', 'run:eslintfix', 'run:phpcbf' ] );

@@ -1,0 +1,57 @@
+{
+    "sassFiles": { 
+        "dist/css/main.min.css": "css/main.scss",
+    },
+    "copyType": "theme",
+    "doModernizr": "1",
+    "phpFiles": [
+        "*.php",
+        "inc/*.php",
+        "template-parts/*.php",
+        "taxonomies/*.php",
+        "post-types/*.php",
+        "woocommerce/*.php",
+        "woocommerce/**/*.php",
+        "give/*.php",
+    ], // nonexistent directories will throw an error. for recursive inclusion, add just the directory like 'my-directory/'
+    "additionalCopyFiles": [
+        // js
+        {
+            "expand": true,
+            "cwd": "node_modules/jquery-cycle2/build",
+            "src": "jquery.cycle2.min.js.map",
+            "dest": "dist/js/vendor",
+        },
+        {
+            "expand": true,
+            "cwd": "node_modules/jquery-cycle2/build",
+            "src": "jquery.cycle2.min.js",
+            "dest": "dist/js/vendor",
+        },
+        {
+            "expand": true,
+            "cwd": "node_modules/jquery-cycle2/build/plugin",
+            "src": "jquery.cycle2.swipe.min.js",
+            "dest": "dist/js/vendor",
+        },
+        {
+            "expand": true,
+            "cwd": "node_modules/jquery-cycle2/build/plugin",
+            "src": "jquery.cycle2.center.min.js",
+            "dest": "dist/js/vendor",
+        },
+        {
+            "expand": true,
+            "cwd": "node_modules/magnific-popup/dist",
+            "src": "jquery.magnific-popup.min.js",
+            "dest": "dist/js/vendor",
+        },
+        // css
+        {
+            "expand": true,
+            "cwd": "node_modules/magnific-popup/dist",
+            "src": "magnific-popup.css",
+            "dest": "dist/css/vendor",
+        }
+    ]
+}
