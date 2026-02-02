@@ -2,8 +2,6 @@
     "sassFiles": { 
         "dist/css/main.min.css": "css/main.scss",
     },
-    "copyType": "theme",
-    "doModernizr": "1",
     "phpFiles": [
         "*.php",
         "inc/*.php",
@@ -13,7 +11,8 @@
         "woocommerce/*.php",
         "woocommerce/**/*.php",
         "give/*.php",
-    ], // nonexistent directories will throw an error. for recursive inclusion, add just the directory like 'my-directory/'
+    ],
+    "copyType": "theme",
     "additionalCopyFiles": [
         // js
         {
@@ -53,5 +52,11 @@
             "src": "magnific-popup.css",
             "dest": "dist/css/vendor",
         }
-    ]
+    ],
+    "copyCycle2": false,
+    "copyMagnific": false,
+    "copyDefaultPackage": true,
+    "copyDefaultComposer": true,
+    "doModernizr": true,
+    "doSvgStore": false
 }
