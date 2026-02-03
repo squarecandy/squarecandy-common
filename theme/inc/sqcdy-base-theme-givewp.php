@@ -315,3 +315,23 @@ function squarecandy_givewp_campaign_workaround() {
 		wp_add_inline_script( 'jquery', $script, 'before' ); //requires jquery
 	}
 }
+
+// Redirect GiveWP Donor Single Overview to Legacy Overview
+// /wp-admin/edit.php?post_type=give_forms&page=give-donors&view=overview&id=1234 TO
+// /wp-admin/edit.php?post_type=give_forms&page=give-donors&view=legacy-overview&id=1234
+
+// NOTE: remove this when https://givewp.featureos.app/p/give-manager-role-should-be-able-to-edit-donor-profiles is resolved
+add_action( 'admin_init', 'squarecandy_givewp_redirect_donor_overview' );
+function squarecandy_givewp_redirect_donor_overview() {
+	if ( isset( $_GET['post_type'] ) && 'give_forms' === $_GET['post_type'] && isset( $_GET['page'] ) && 'give-donors' === $_GET['page'] && isset( $_GET['view'] ) && 'overview' === $_GET['view'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$redirect_url = add_query_arg(
+			array(
+				'view' => 'legacy-overview',
+			),
+			remove_query_arg( 'view' )
+		);
+		wp_safe_redirect( esc_url_raw( $redirect_url ) );
+		exit;
+	}
+}
+
