@@ -1,0 +1,53 @@
+{
+	"version": "0.0.1",
+	"scripts": {
+		"release": "standard-version"
+	},
+	"standard-version": {
+		"skip": {
+			"tag": false
+		}
+	},
+	"devDependencies": {
+		"@lodder/grunt-postcss": "3.1.1",
+		"@types/eslint": "9.6.1",
+		"@wordpress/eslint-plugin": "24.0.0",
+		"@wordpress/scripts": "31.3.0",
+		"@wordpress/stylelint-config": "23.30.0",
+		"autoprefixer": "10.4.23",
+		"caniuse-lite": "^1.0.30001766",
+		"cssnano": "5.1.8",
+		"globals": "17.1.0",
+		"grunt": "1.6.1",
+		"grunt-contrib-clean": "2.0.0",
+		"grunt-contrib-copy": "1.0.0",
+		"grunt-contrib-watch": "1.1.0",
+		"grunt-eslint": "26.0.0",
+		"grunt-gitnewer": "1.0.5",
+		"grunt-phpcs": "github:gotcha9999/grunt-phpcs#master",
+		"grunt-modernizr": "5.0.2",
+		"grunt-run": "0.8.1",
+		"grunt-sass": "4.1.0",
+		"grunt-string-replace": "1.3.1",
+		"grunt-stylelint": "0.20.1",
+		"grunt-svgstore": "2.0.0",
+		"grunt-terser": "1.0.0",
+		"hoverintent": "2.2.1",
+		"jquery-cycle2": "github:thecarnie/cycle2#master",
+		"jquery-hoverintent": "1.10.2",
+		"magnific-popup": "1.2.0",
+		"sass": "1.84.0",
+		"squarecandy-common": "github:squarecandy/squarecandy-common#main",
+		"standard-version": "9.3.0",
+		"stylelint": "16.26.1",
+		"stylelint-config-recommended-scss": "16.0.2",
+		"stylelint-config-sass-guidelines": "12.1.0",
+		"stylelint-config-scss": "1.0.0-security",
+		"stylelint-order": "6.0.4",
+		"stylelint-scss": "6.14.0",
+		"terser": "5.44.1"
+	},
+	"overrides": {
+		"webpack-dev-server": "5.2.3"
+	}
+}
