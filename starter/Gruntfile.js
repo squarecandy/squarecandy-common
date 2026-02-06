@@ -268,32 +268,11 @@ module.exports = function( grunt ) {
 		watch: {
 			css: {
 				files: [ 'css/*.scss', 'css/**/*.scss' ],
-				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'string-replace', 'run:ding' ],
+				tasks: [ 'run:stylelintfix', 'sass', 'postcss', 'run:ding' ],
 			},
 			js: {
 				files: [ 'js/*.js' ],
 				tasks: [ 'run:eslintfix', 'terser', 'run:ding' ],
-			},
-		},
-		'string-replace': {
-			dist: {
-				files: [
-					{
-						expand: true,
-						cwd: 'dist/css/',
-						src: '*.min.css.map',
-						dest: 'dist/css/',
-					},
-				],
-				options: {
-					replacements: [
-						// place files inline example
-						{
-							pattern: /(file:\/\/\/([^,]*)\/wp-content)+/g,
-							replacement: '/wp-content',
-						},
-					],
-				},
 			},
 		},
 		gitnewer: {
@@ -321,7 +300,6 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( '@lodder/grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-run' );
-	grunt.loadNpmTasks( 'grunt-string-replace' );
 	grunt.loadNpmTasks( 'grunt-gitnewer' );
 
 	// optional npm tasks
@@ -333,12 +311,12 @@ module.exports = function( grunt ) {
 		grunt.loadNpmTasks( 'grunt-svgstore' );
 	}
 
-	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'string-replace', 'watch' ] );
+	grunt.registerTask( 'default', [ 'run:stylelintfix', 'run:eslintfix', 'sass', 'postcss', 'terser', 'watch' ] );
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
 
 	grunt.registerTask( 'compile', 'compile task with optional modernizr', function() {
 	    const beforeTasks = [ 'sass', 'postcss' ];
-	    const afterTasks = [ 'terser', 'string-replace' ];
+	    const afterTasks = [ 'terser' ];
 	    if ( settings.doModernizr ) {
 	      beforeTasks.push( 'modernizr' );
 	    }
