@@ -1,6 +1,6 @@
 {
 	"name": "squarecandy-common",
-	"version": "1.9.0",
+	"version": "2.0.0",
 	"description": "This is the one for the squarecandy-common repo. Don't copy this one to your project.",
 	"repository": {
 		"type": "git",

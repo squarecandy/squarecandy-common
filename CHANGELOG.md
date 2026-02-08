@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/squarecandy/squarecandy-common/compare/v1.9.0...v2.0.0) (2026-02-08)
+
+
+### Features
+
+* Major updates to CI / build tools ([7ae9942](https://github.com/squarecandy/squarecandy-common/commit/7ae99427bd8ffa3b7d953ca5256f499cdf58b565))
+* new php linting and fixing approach ([7264de5](https://github.com/squarecandy/squarecandy-common/commit/7264de546c3aaeb8136d951ff26fd82eadafe05e))
+
+
+### Bug Fixes
+
+* add check so we don't copy removed files if they've been deleted ([b3be445](https://github.com/squarecandy/squarecandy-common/commit/b3be445e379b9c0e36e09a5060c93842c3a6e43b))
+* add comments ([34581cc](https://github.com/squarecandy/squarecandy-common/commit/34581cc7ec25067e9f40495c1c8132438cf843b2))
+* add Gruntfile copy, add template package.json, composer.json & Gruntfile.js to common directory ([e687014](https://github.com/squarecandy/squarecandy-common/commit/e68701401d2be01d531670943acb232031958511))
+* add our fork of phprtflite ([b0d4314](https://github.com/squarecandy/squarecandy-common/commit/b0d431458a9e8b2cc3f67bed5df6934adec6e621))
+* add step to check for new files before bump ([504af07](https://github.com/squarecandy/squarecandy-common/commit/504af079e62803a25f798003480fa31c0e9ace14))
+* add svgstore, add conditional copy for cycle2, magnific, package.json & composer.json (with version replace for package.json) ([27f6c73](https://github.com/squarecandy/squarecandy-common/commit/27f6c7392853e344ff32307d55d50f7154f650ce))
+* back out cssnano calc setting ([81d6a90](https://github.com/squarecandy/squarecandy-common/commit/81d6a90083cbbd24b87bb1f86717a782e3c50603))
+* check css subdirectories ([cec29d0](https://github.com/squarecandy/squarecandy-common/commit/cec29d0754fca138d4c6d33f8345f68394691d18))
+* cssnano, don't mess with calc ([9765ec4](https://github.com/squarecandy/squarecandy-common/commit/9765ec44cceffa0c1389ec1e26ae049a68fa60ae))
+* disable cssnano colormin ([23e879f](https://github.com/squarecandy/squarecandy-common/commit/23e879f7949d8462a36e8404fbdb1117a99abab1))
+* disable SEOPress per-post redirections ([d4a77ed](https://github.com/squarecandy/squarecandy-common/commit/d4a77ed564a000ac0effa9d6bb8b9a5c868f1114))
+* existing code comments not passing new rules. ([50addb9](https://github.com/squarecandy/squarecandy-common/commit/50addb9c9a7057b096553474817fc32950260814))
+* format long line ([cbe04ee](https://github.com/squarecandy/squarecandy-common/commit/cbe04ee9b66d4f664a6dc37325929566c6fc1bd5))
+* ignore WordPress capital P rule in URL - wider ignore rule matches old and new rulesets ([3d69e32](https://github.com/squarecandy/squarecandy-common/commit/3d69e3266dd1f059f2881561284894940194d9b3))
+* improve whitespace enforcement ([50e4a77](https://github.com/squarecandy/squarecandy-common/commit/50e4a77eae651a026779bfafe70f2a050a629cbb))
+* make check for new files include subdirectories, fix gitnewer ([ef58397](https://github.com/squarecandy/squarecandy-common/commit/ef583974d2664751702699da6f64eaf105bf7dd7))
+* max-line-length does not work anymore ([d74affd](https://github.com/squarecandy/squarecandy-common/commit/d74affdbaf8b696adf6b39c1e046d79f859b6f8c))
+* more phpcs rule tweaks for less legacy changes ([6308329](https://github.com/squarecandy/squarecandy-common/commit/6308329181880ac540eef0da3f5b0c536aaaf023))
+* move copy out of the compile process, create `grunt update` ([28a000f](https://github.com/squarecandy/squarecandy-common/commit/28a000fa78ab51870dcae53f3bc335fa1a26a66f))
+* proof of concept for grunt settings file ([a5487a7](https://github.com/squarecandy/squarecandy-common/commit/a5487a7f562fe8bc2af63760c223e17931f03f78))
+* Redirect GiveWP Donor Single Overview to Legacy Overview ([795f57f](https://github.com/squarecandy/squarecandy-common/commit/795f57fe94f17c333f3d10ac7d346433552a991b))
+* remove "starter" dir now that all files are duplicated in "common" ([a38e34d](https://github.com/squarecandy/squarecandy-common/commit/a38e34d266f4b27b312fddaafc50ef49a6db4ca0))
+* remove extra logging ([11d9bf2](https://github.com/squarecandy/squarecandy-common/commit/11d9bf23a1d41a7b301e2bb285da7c860ca241f4))
+* set some stylelint issues to warnings so they don't stop compiling but we can improve things as time allows ([fd9a368](https://github.com/squarecandy/squarecandy-common/commit/fd9a3681b95225f7794d825b2e7e5681955b257a))
+* tweak eslint rules for better legacy matching ([08ebbec](https://github.com/squarecandy/squarecandy-common/commit/08ebbec440db5d1b238d67c4c3458405bb2b7304))
+* update github workflow settings ([71b0742](https://github.com/squarecandy/squarecandy-common/commit/71b0742907bfb34cef5558d417048148852ec269))
+* update grunt-sass & sass and remove no longer necessary string-replace ([549e4ac](https://github.com/squarecandy/squarecandy-common/commit/549e4aceedc52737478cda95c46e1142d2f479d6))
+
 ## [1.9.0](https://github.com/squarecandy/squarecandy-common/compare/v1.8.0...v1.9.0) (2026-01-22)
 
 
