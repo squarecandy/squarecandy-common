@@ -59,7 +59,7 @@
 	</rule>
 
 	<!-- Check correct spacing of language constructs. This also ensures that the
-	     above rule for not using brackets with require is fixed correctly.
+		 above rule for not using brackets with require is fixed correctly.
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1153 -->
 	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
 

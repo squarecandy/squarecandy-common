@@ -133,29 +133,29 @@ Example file as follows: (nb must be valid json so if copying below, delete the 
 
 ```
 {
-    "sassFiles": { // files & destinations for sass
-        "dist/css/main.min.css": "css/main.scss",
-        "dist/css/admin.min.css": "css/admin.scss",
-        "dist/css/squarecandy-tinymce-editor-style.min.css": "css/squarecandy-tinymce-editor-style.scss"
-    },
-    "copyType": "plugin", // plugin or theme: controls which additional directory will be copied over
-    "phpFiles": [ "*.php", "inc/*.php", "template-parts/*.php", "tribe/", "tribe-events/*.php" ],
-    // php files to be processed by phpcs. Non-existent directories will throw an error. To include a directory recursively include like 'my-directory/'
-    "additionalCopyFiles": [ // extra files to be included in the copy process
-        {
-            "expand": true,
-            "cwd": "vendor/phprtflite/phprtflite/lib",
-            "src": "**",
-            "dest": "dist/php/phprtflite"
-        }
-    ],
-    "copyCycle2": false, // whether to copy over cycle2 files
-    "copyMagnific": false, // whether to copy over magnific files
-    "customGruntfile": false, // if true don't copy over Gruntfile.js
-    "customPackageJson": false, // if true don't copy over package.json
-    "customComposerJson": false, // if true don't copy over composer.json
-    "doModernizr": false, // run grunt modernizr task
-    "doSvgStore": false // run grunt svgstore task
+	"sassFiles": { // files & destinations for sass
+		"dist/css/main.min.css": "css/main.scss",
+		"dist/css/admin.min.css": "css/admin.scss",
+		"dist/css/squarecandy-tinymce-editor-style.min.css": "css/squarecandy-tinymce-editor-style.scss"
+	},
+	"copyType": "plugin", // plugin or theme: controls which additional directory will be copied over
+	"phpFiles": [ "*.php", "inc/*.php", "template-parts/*.php", "tribe/", "tribe-events/*.php" ],
+	// php files to be processed by phpcs. Non-existent directories will throw an error. To include a directory recursively include like 'my-directory/'
+	"additionalCopyFiles": [ // extra files to be included in the copy process
+		{
+			"expand": true,
+			"cwd": "vendor/phprtflite/phprtflite/lib",
+			"src": "**",
+			"dest": "dist/php/phprtflite"
+		}
+	],
+	"copyCycle2": false, // whether to copy over cycle2 files
+	"copyMagnific": false, // whether to copy over magnific files
+	"customGruntfile": false, // if true don't copy over Gruntfile.js
+	"customPackageJson": false, // if true don't copy over package.json
+	"customComposerJson": false, // if true don't copy over composer.json
+	"doModernizr": false, // run grunt modernizr task
+	"doSvgStore": false // run grunt svgstore task
 }
 ```
 

@@ -28,99 +28,99 @@ module.exports = function( grunt ) {
 				return dest + matchedSrcPath;
 			},
 			// We are removing .eslintignore & .eslintrc, copy over these files if they exist
-		    filter: function( filepath ) {
-		    	if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
-		    		// get the dest path of the file
-		    		const basePath = filepath.replace( this.cwd + '/', '' );
-		    		// check whether the file exists, if it does, copy over it, but if not, don't re-add it
-		    		const fileExists = grunt.file.exists( basePath );
-		    		if ( fileExists ) {
-		    			grunt.log.writeln( basePath + ' should be deleted.' );
-		    		}					    		
-		    		return fileExists;
-		    	} else if ( filepath.includes( 'grunt-options.json' ) ) {
-		    		// get the dest path of the file
-		    		const basePath = filepath.replace( this.cwd + '/', '' );
-		    		// check whether the file exists, if it does, don't copy over it, if it doesn't, add it
-		    		const fileExists = grunt.file.exists( basePath );	    		
-		    		return ! fileExists;
-		    	} else if ( filepath.includes( 'Gruntfile.js' ) ) {
-		    		// unless the repo has a custom gruntfile, copy ours over
-		    		grunt.log.writeln( settings.customGruntfile );
-		    		grunt.log.writeln( typeof settings.customGruntfile );
-		    		return ! settings.customGruntfile;
-		    	} else if ( filepath.includes( 'package.json' ) ) {
-		    		return ! settings.customPackageJson;
-		    	} else if ( filepath.includes( 'composer.json' ) ) {
-		    		return ! settings.customComposerJson;
-		    	} else {
-		    		return true;
-		    	}
-		    },
+			filter: function( filepath ) {
+				if ( filepath.includes( '.eslintignore' ) || filepath.includes( '.eslintrc' ) ) {
+					// get the dest path of the file
+					const basePath = filepath.replace( this.cwd + '/', '' );
+					// check whether the file exists, if it does, copy over it, but if not, don't re-add it
+					const fileExists = grunt.file.exists( basePath );
+					if ( fileExists ) {
+						grunt.log.writeln( basePath + ' should be deleted.' );
+					}								
+					return fileExists;
+				} else if ( filepath.includes( 'grunt-options.json' ) ) {
+					// get the dest path of the file
+					const basePath = filepath.replace( this.cwd + '/', '' );
+					// check whether the file exists, if it does, don't copy over it, if it doesn't, add it
+					const fileExists = grunt.file.exists( basePath );				
+					return ! fileExists;
+				} else if ( filepath.includes( 'Gruntfile.js' ) ) {
+					// unless the repo has a custom gruntfile, copy ours over
+					grunt.log.writeln( settings.customGruntfile );
+					grunt.log.writeln( typeof settings.customGruntfile );
+					return ! settings.customGruntfile;
+				} else if ( filepath.includes( 'package.json' ) ) {
+					return ! settings.customPackageJson;
+				} else if ( filepath.includes( 'composer.json' ) ) {
+					return ! settings.customComposerJson;
+				} else {
+					return true;
+				}
+			},
 		},
 	];
 
 	// add theme or plugin specific files
 	if ( settings.copyType == 'plugin' || settings.copyType == 'theme' ) {
 		const themeOrPluginFiles = [
-	        {
+			{
 				expand: true,
 				cwd: 'node_modules/squarecandy-common/' + settings.copyType,
 				src: '**/*',
 				dest: '',
 				dot: true,
-	        },
-	    ];
+			},
+		];
 		copyFiles = copyFiles.concat( themeOrPluginFiles );
 	}
 
 	// optionally add cycle2
 	if ( settings.copyCycle2 ) {
 		const cycle2Files = [
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/jquery-cycle2/build",
-	            "src": "jquery.cycle2.min.js.map",
-	            "dest": "dist/js/vendor",
-	        },
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/jquery-cycle2/build",
-	            "src": "jquery.cycle2.min.js",
-	            "dest": "dist/js/vendor",
-	        },
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/jquery-cycle2/build/plugin",
-	            "src": "jquery.cycle2.swipe.min.js",
-	            "dest": "dist/js/vendor",
-	        },
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/jquery-cycle2/build/plugin",
-	            "src": "jquery.cycle2.center.min.js",
-	            "dest": "dist/js/vendor",
-	        },
-	    ];
+			{
+				"expand": true,
+				"cwd": "node_modules/jquery-cycle2/build",
+				"src": "jquery.cycle2.min.js.map",
+				"dest": "dist/js/vendor",
+			},
+			{
+				"expand": true,
+				"cwd": "node_modules/jquery-cycle2/build",
+				"src": "jquery.cycle2.min.js",
+				"dest": "dist/js/vendor",
+			},
+			{
+				"expand": true,
+				"cwd": "node_modules/jquery-cycle2/build/plugin",
+				"src": "jquery.cycle2.swipe.min.js",
+				"dest": "dist/js/vendor",
+			},
+			{
+				"expand": true,
+				"cwd": "node_modules/jquery-cycle2/build/plugin",
+				"src": "jquery.cycle2.center.min.js",
+				"dest": "dist/js/vendor",
+			},
+		];
 		copyFiles = copyFiles.concat( cycle2Files );
 	}
 
 	// optionally add magnific
 	if ( settings.copyMagnific ) {
 		const magnificFiles = [
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/magnific-popup/dist",
-	            "src": "jquery.magnific-popup.min.js",
-	            "dest": "dist/js/vendor",
-	        },
-	        {
-	            "expand": true,
-	            "cwd": "node_modules/magnific-popup/dist",
-	            "src": "magnific-popup.css",
-	            "dest": "dist/css/vendor",
-	        }
-    	];
+			{
+				"expand": true,
+				"cwd": "node_modules/magnific-popup/dist",
+				"src": "jquery.magnific-popup.min.js",
+				"dest": "dist/js/vendor",
+			},
+			{
+				"expand": true,
+				"cwd": "node_modules/magnific-popup/dist",
+				"src": "magnific-popup.css",
+				"dest": "dist/css/vendor",
+			}
+		];
 		copyFiles = copyFiles.concat( magnificFiles );
 	}
 	copyFiles = ! settings.additionalCopyFiles ? copyFiles : copyFiles.concat( settings.additionalCopyFiles );
@@ -164,14 +164,14 @@ module.exports = function( grunt ) {
 			preflight: {
 				files: copyFiles,
 				options: {
-			      process: function( content, srcpath ) {
-			      	if ( srcpath.includes( 'package.json' ) ) {
-			      		//if copying package json, replace the placeholder version with the current local version
-			      		return content.replace( '"version": "0.0.1"', '"version": "' + pkg.version + '"' );
-			      	}
-			        return content;
-			      },
-			    },
+				process: function( content, srcpath ) {
+						if ( srcpath.includes( 'package.json' ) ) {
+							//if copying package json, replace the placeholder version with the current local version
+							return content.replace( '"version": "0.0.1"', '"version": "' + pkg.version + '"' );
+						}
+					return content;
+					},
+				},
 			},
 		},
 		modernizr: {
@@ -328,16 +328,16 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'update', [ 'run:update', 'copy:preflight' ] );
 
 	grunt.registerTask( 'compile', 'compile task with optional modernizr', function() {
-	    const beforeTasks = [ 'sass', 'postcss' ];
-	    const afterTasks = [ 'terser' ];
-	    if ( settings.doModernizr ) {
-	      beforeTasks.push( 'modernizr' );
-	    }
-	    tasks = beforeTasks.concat( afterTasks );
-	    if ( settings.doSvgStore ) {
-	      beforeTasks.push( 'svgstore' );
-	    }
-	    grunt.task.run( tasks );
+		const beforeTasks = [ 'sass', 'postcss' ];
+		const afterTasks = [ 'terser' ];
+		if ( settings.doModernizr ) {
+			beforeTasks.push( 'modernizr' );
+		}
+		tasks = beforeTasks.concat( afterTasks );
+		if ( settings.doSvgStore ) {
+			beforeTasks.push( 'svgstore' );
+		}
+		grunt.task.run( tasks );
 	} );
 
 	grunt.registerTask( 'lint', [ 'stylelint', 'eslint', 'run:phpcs' ] );
@@ -348,8 +348,8 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'shouldBump', [ 'gitnewer:checkForNewFiles' ] ); // send output of git-newer to checkForNewFiles
 
-    grunt.registerMultiTask( 'checkForNewFiles', 'Check if files changed that need to be committed before bumping.', function() {
-    	// files that change with bump:
+	grunt.registerMultiTask( 'checkForNewFiles', 'Check if files changed that need to be committed before bumping.', function() {
+		// files that change with bump:
 		const versionFiles = [
 			'package-lock.json',
 			'package.json',
@@ -363,9 +363,9 @@ module.exports = function( grunt ) {
 		}
 
 		this.filesSrc.forEach( function( file ) {
-	        if ( ! versionFiles.includes( file ) ) {
-	        	grunt.fail.warn( file + ' should be committed before bump. ' ); // abort mission
-	        }
-	    } );
+			if ( ! versionFiles.includes( file ) ) {
+				grunt.fail.warn( file + ' should be committed before bump. ' ); // abort mission
+			}
+		} );
 	} );
 };
