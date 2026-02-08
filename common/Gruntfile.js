@@ -164,12 +164,12 @@ module.exports = function( grunt ) {
 			preflight: {
 				files: copyFiles,
 				options: {
-				process: function( content, srcpath ) {
+					process: function( content, srcpath ) {
 						if ( srcpath.includes( 'package.json' ) ) {
 							//if copying package json, replace the placeholder version with the current local version
 							return content.replace( '"version": "0.0.1"', '"version": "' + pkg.version + '"' );
 						}
-					return content;
+						return content;
 					},
 				},
 			},
