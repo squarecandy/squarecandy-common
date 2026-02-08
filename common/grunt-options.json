@@ -9,6 +9,7 @@
 	"additionalCopyFiles": [],
 	"copyCycle2": false,
 	"copyMagnific": false,
+	"copyMixitup": false,
 	"customGruntfile": false,
 	"customPackageJson": false,
 	"customComposerJson": false,

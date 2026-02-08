@@ -36,6 +36,7 @@
 		"jquery-cycle2": "github:thecarnie/cycle2#master",
 		"jquery-hoverintent": "1.10.2",
 		"magnific-popup": "1.2.0",
+		"mixitup": "3.3.2",
 		"sass": "1.84.0",
 		"squarecandy-common": "github:squarecandy/squarecandy-common#main",
 		"standard-version": "9.3.0",

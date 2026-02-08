@@ -123,6 +123,19 @@ module.exports = function( grunt ) {
 		];
 		copyFiles = copyFiles.concat( magnificFiles );
 	}
+
+	// optionally add mixitup
+	if ( settings.copyMixitup ) {
+		const mixitupFiles = [
+			{
+				expand: true,
+				cwd: 'node_modules/mixitup/dist',
+				src: 'mixitup.min.js',
+				dest: 'dist/js/vendor',
+			},
+		];
+		copyFiles = copyFiles.concat( mixitupFiles );
+	}
 	copyFiles = ! settings.additionalCopyFiles ? copyFiles : copyFiles.concat( settings.additionalCopyFiles );
 
 	// define php files to be linted
