@@ -163,6 +163,7 @@ module.exports = function( grunt ) {
 					require( 'cssnano' )( {
 						preset: [ 'default', {
 							colormin: false, // Disable color optimization completely. Shortening is mostly handled by stylelint already.
+							reduceInitial: false, // stops background-color from changing transparent to initial
 						} ],
 					} ),
 				],
