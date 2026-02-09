@@ -46,8 +46,6 @@ module.exports = function( grunt ) {
 					return ! fileExists;
 				} else if ( filepath.includes( 'Gruntfile.js' ) ) {
 					// unless the repo has a custom gruntfile, copy ours over
-					grunt.log.writeln( settings.customGruntfile );
-					grunt.log.writeln( typeof settings.customGruntfile );
 					return ! settings.customGruntfile;
 				} else if ( filepath.includes( 'package.json' ) ) {
 					return ! settings.customPackageJson;
