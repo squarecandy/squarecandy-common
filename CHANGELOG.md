@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/squarecandy/squarecandy-common/compare/v2.0.2...v2.0.3) (2026-02-11)
+
+
+### Bug Fixes
+
+* additional cssnano overrides for background-color:initial ([095f60d](https://github.com/squarecandy/squarecandy-common/commit/095f60d0c6660296b810d0bb6c8a23568eb8cd46))
+* hide the depreciation notices about [@import](https://github.com/import) in sass for now. ([1303ba8](https://github.com/squarecandy/squarecandy-common/commit/1303ba8c0bf03959d37cd85f01eab3d688b8df7e))
+* remove no longer used package & debug logging ([3f88fe8](https://github.com/squarecandy/squarecandy-common/commit/3f88fe86ea7b4bf39d6cf959b8b003ba0f16ec6d))
+
 ### [2.0.2](https://github.com/squarecandy/squarecandy-common/compare/v2.0.1...v2.0.2) (2026-02-08)
 
 
