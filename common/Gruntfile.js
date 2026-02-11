@@ -151,6 +151,7 @@ module.exports = function( grunt ) {
 				compass: true,
 				style: 'expanded',
 				sourceMap: true,
+				silenceDeprecations: [ 'import' ],
 			},
 		},
 		postcss: {
