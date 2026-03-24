@@ -314,3 +314,18 @@ add_filter(
 		return null;
 	}
 );
+
+// disable Post Types Order plugin drag&drop reordering on regular admin archive pages
+if ( ! function_exists( 'squarecandy_pto_options' ) ) :
+	add_filter( 'pto/get_options', 'squarecandy_pto_options' );
+	function squarecandy_pto_options( $options ) {
+		if ( isset( $options['allow_reorder_default_interfaces'] ) && is_array( $options['allow_reorder_default_interfaces'] ) ) {
+			foreach ( $options['allow_reorder_default_interfaces'] as $key => $value ) {
+				if ( $value !== 'no' ) {
+					$options['allow_reorder_default_interfaces'][ $key ] = 'no';
+				}
+			}
+		}
+		return $options;
+	}
+endif;
