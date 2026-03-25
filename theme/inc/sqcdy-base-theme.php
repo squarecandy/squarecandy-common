@@ -303,6 +303,7 @@ if ( ! function_exists( 'squarecandy_stop_wordpress_org_api_calls' ) ) :
 	}
 endif;
 
+
 // remove the contain-intrinsic-size: 3000px 1500px declaration forced into WP Core <head> output
 remove_action( 'wp_head', 'wp_print_auto_sizes_contain_css_fix', 1 );
 
@@ -315,14 +316,47 @@ add_filter(
 	}
 );
 
+
 // disable Post Types Order plugin drag&drop reordering on regular admin archive pages
 if ( ! function_exists( 'squarecandy_pto_options' ) ) :
+
 	add_filter( 'pto/get_options', 'squarecandy_pto_options' );
+
 	function squarecandy_pto_options( $options ) {
+
+		$screen           = get_current_screen();
+		$is_settings_page = isset( $screen->id ) && 'settings_page_cpto-options' === $screen->id;
+		$is_archive_page  = isset( $screen->id ) && 'edit-page' === $screen->id && isset( $screen->post_type );
+
+		if ( ! $is_settings_page || $is_archive_page ) {
+			return $options;
+		}
+
+		// check and adjust the cpto options, $options['allow_reorder_default_interfaces'] might be an empty array, or an array of post_types with 'yes' or 'no'
 		if ( isset( $options['allow_reorder_default_interfaces'] ) && is_array( $options['allow_reorder_default_interfaces'] ) ) {
-			foreach ( $options['allow_reorder_default_interfaces'] as $key => $value ) {
-				if ( $value !== 'no' ) {
-					$options['allow_reorder_default_interfaces'][ $key ] = 'no';
+
+			$override_settings = true;
+			$count             = count( $options['allow_reorder_default_interfaces'] );
+
+			// check if we have customized settings in the db (i.e. not all the same) we want to keep those if so
+			if ( $count ) {
+				$unique = array_unique( $options['allow_reorder_default_interfaces'] );
+				if ( count( $unique ) > 1 ) {
+					$override_settings = false;
+				}
+			}
+
+			// otherwise set the option(s) to 'no'
+			if ( $override_settings ) {
+				if ( $is_archive_page ) {
+					// on the archive page we just need to set this one to no
+					$options['allow_reorder_default_interfaces'][ $screen->post_type ] = 'no';
+				} else {
+					// on the settings page set everything to no so if we want to customize we can just turn on the ones we want
+					$post_types = $count ? array_keys( $options['allow_reorder_default_interfaces'] ) : get_post_types();
+					foreach ( $post_types as $post_type ) {
+						$options['allow_reorder_default_interfaces'][ $post_type ] = 'no';
+					}
 				}
 			}
 		}
