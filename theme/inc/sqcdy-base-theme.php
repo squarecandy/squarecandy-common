@@ -326,9 +326,10 @@ if ( ! function_exists( 'squarecandy_pto_options' ) ) :
 
 		$screen           = get_current_screen();
 		$is_settings_page = isset( $screen->id ) && 'settings_page_cpto-options' === $screen->id;
-		$is_archive_page  = isset( $screen->id ) && 'edit-page' === $screen->id && isset( $screen->post_type );
+		$is_archive_page  = isset( $screen->id ) && 'edit' === $screen->base && isset( $screen->post_type );
 
-		if ( ! $is_settings_page || $is_archive_page ) {
+		// if we're not in either place, abort
+		if ( ! $is_settings_page && ! $is_archive_page ) {
 			return $options;
 		}
 
