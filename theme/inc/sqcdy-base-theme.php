@@ -324,6 +324,11 @@ if ( ! function_exists( 'squarecandy_pto_options' ) ) :
 
 	function squarecandy_pto_options( $options ) {
 
+		// if this fires before the admin screen function, bail out
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return $options;
+		}
+
 		$screen           = get_current_screen();
 		$is_settings_page = isset( $screen->id ) && 'settings_page_cpto-options' === $screen->id;
 		$is_archive_page  = isset( $screen->id ) && 'edit' === $screen->base && isset( $screen->post_type );
