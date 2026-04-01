@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.4](https://github.com/squarecandy/squarecandy-common/compare/v2.0.3...v2.0.4) (2026-04-01)
+
+
+### Bug Fixes
+
+* fix archive page detection ([4ccb170](https://github.com/squarecandy/squarecandy-common/commit/4ccb170ddf969268a3061dfa7de844bcde547dfb))
+* make sure get_current_screen exists ([b51468d](https://github.com/squarecandy/squarecandy-common/commit/b51468dda238a72dfa89368318548f44c634ab10))
+* stop Post Types Order interface appearing on regular admin archive pages ([9b7a472](https://github.com/squarecandy/squarecandy-common/commit/9b7a4729010bef0e6ff7968fcd2b8e8a03c3f595))
+
 ### [2.0.3](https://github.com/squarecandy/squarecandy-common/compare/v2.0.2...v2.0.3) (2026-02-11)
 
 
