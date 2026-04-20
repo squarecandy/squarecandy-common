@@ -273,7 +273,7 @@ module.exports = function( grunt ) {
 				cmd: 'bash',
 				args: [
 					'-c',
-					'./vendor/squizlabs/php_codesniffer/bin/phpcbf ' +
+					'./vendor/squizlabs/php_codesniffer/bin/phpcbf --exclude=Universal.Operators.StrictComparisons ' +
 					'--standard=phpcs.xml ' +
 					phpPaths + ' || true',
 				],
