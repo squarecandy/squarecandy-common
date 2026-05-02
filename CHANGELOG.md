@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.6](https://github.com/squarecandy/squarecandy-common/compare/v2.0.5...v2.0.6) (2026-05-02)
+
+
+### Bug Fixes
+
+* update WP Standards action ([ec5032c](https://github.com/squarecandy/squarecandy-common/commit/ec5032c712b55fdd9ad248b7837fb8ef64b593da))
+
 ### [2.0.5](https://github.com/squarecandy/squarecandy-common/compare/v2.0.4...v2.0.5) (2026-04-20)
 
 
