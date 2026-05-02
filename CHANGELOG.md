@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.5](https://github.com/squarecandy/squarecandy-common/compare/v2.0.4...v2.0.5) (2026-04-20)
+
+
+### Bug Fixes
+
+* stop phpcbf from changing comparison operators ([3b7a417](https://github.com/squarecandy/squarecandy-common/commit/3b7a417dfcee75a9b618431d54d9393070c2bc8a))
+
 ### [2.0.4](https://github.com/squarecandy/squarecandy-common/compare/v2.0.3...v2.0.4) (2026-04-01)
 
 
