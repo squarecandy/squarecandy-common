@@ -369,3 +369,80 @@ if ( ! function_exists( 'squarecandy_pto_options' ) ) :
 		return $options;
 	}
 endif;
+
+
+/* Heartbeat API Fixes */
+
+if ( ! function_exists( 'squarecandy_heartbeat_settings' ) ) :
+	// Control WordPress Heartbeat API to prevent excessive admin-ajax.php requests
+	function squarecandy_heartbeat_settings( $settings ) {
+		// Slow down heartbeat to every 60 seconds (default is 15)
+		$settings['interval'] = 60;
+		return $settings;
+	}
+	add_filter( 'heartbeat_settings', 'squarecandy_heartbeat_settings', PHP_INT_MAX - 10 );
+endif;
+
+if ( ! function_exists( 'squarecandy_disable_heartbeat' ) ) :
+	// Disable heartbeat on all post list screens where it's not needed
+	function squarecandy_disable_heartbeat() {
+		global $pagenow;
+		// Disable on all post/page/CPT list screens - heartbeat only needed when editing individual posts
+		if ( 'edit.php' === $pagenow || 'edit-tags.php' === $pagenow ) {
+			wp_deregister_script( 'heartbeat' );
+		}
+	}
+	add_action( 'admin_enqueue_scripts', 'squarecandy_disable_heartbeat', 999 );
+endif;
+
+// Disable SearchWP's admin bar heartbeat integration on all wp-admin pages
+// (Note: The 10-second heartbeat interval on post.php is from WordPress core's post lock detection, not SearchWP)
+add_filter( 'searchwp\admin_bar', '__return_false' );
+
+if ( ! function_exists( 'squarecandy_heartbeat_autostop' ) ) :
+	// Stop heartbeat when session expires to prevent 400 errors from stale tabs
+	function squarecandy_heartbeat_autostop() {
+		?>
+		<script>
+		(function($) {
+			$(document).ready(function() {
+				// Override WordPress core's aggressive 10-second post lock heartbeat
+				// Wait for first heartbeat-tick to ensure post.js has executed and set its interval
+				if (typeof wp !== 'undefined' && wp.heartbeat) {
+					$(document).one('heartbeat-tick', function() {
+						var currentInterval = wp.heartbeat.interval();
+						if (currentInterval < 40) {
+							wp.heartbeat.interval(40);
+							console.log('Overriding WordPress core heartbeat from ' + currentInterval + 's to 40s for better server performance');
+						}
+					});
+				}
+
+				// Watch for session expiration by monitoring when wp-auth-check-wrap becomes visible
+				// WordPress changes the modal from display:none to display:block when session expires
+				var $modal = $('#wp-auth-check-wrap');
+				if ($modal.length) {
+					var visibilityObserver = new MutationObserver(function(mutations) {
+						mutations.forEach(function(mutation) {
+							if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+								var $target = $(mutation.target);
+								if ($target.is(':visible') && $target.css('display') !== 'none') {
+									if (typeof wp !== 'undefined' && wp.heartbeat) {
+										wp.heartbeat.interval(86400);
+										console.log('User got logged out (login modal became visible). Heartbeat slowed to 24 hours ("stop" functionality not available).');
+									}
+								}
+							}
+						});
+					});
+					visibilityObserver.observe($modal[0], { attributes: true });
+				}
+			});
+		})(jQuery);
+		</script>
+		<?php
+	}
+	add_action( 'admin_footer', 'squarecandy_heartbeat_autostop' );
+endif;
+
+
