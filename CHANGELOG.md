@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.7](https://github.com/squarecandy/squarecandy-common/compare/v2.0.6...v2.0.7) (2026-05-13)
+
+
+### Bug Fixes
+
+* add heartbeat API fixes ([a17bc41](https://github.com/squarecandy/squarecandy-common/commit/a17bc416b2177767a2dd0336525b8beef0c0d8c0))
+
 ### [2.0.6](https://github.com/squarecandy/squarecandy-common/compare/v2.0.5...v2.0.6) (2026-05-02)
 
 
