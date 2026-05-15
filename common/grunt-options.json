@@ -13,6 +13,7 @@
 	"customGruntfile": false,
 	"customPackageJson": false,
 	"customComposerJson": false,
+	"customPhpcs": false,
 	"doModernizr": false,
 	"doSvgStore": false
 }

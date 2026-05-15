@@ -51,6 +51,8 @@ module.exports = function( grunt ) {
 					return ! settings.customPackageJson;
 				} else if ( filepath.includes( 'composer.json' ) ) {
 					return ! settings.customComposerJson;
+				} else if ( filepath.includes( 'phpcs.xml' ) ) {
+					return ! settings.customPhpcs;
 				} else {
 					return true;
 				}
