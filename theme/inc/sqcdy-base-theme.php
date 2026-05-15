@@ -409,17 +409,25 @@ if ( ! function_exists( 'squarecandy_heartbeat_autostop' ) ) :
 				}
 
 				// Watch for session expiration by monitoring when wp-auth-check-wrap becomes visible
-				// WordPress changes the modal from display:none to display:block when session expires
+				// WordPress shows the modal by changing the 'wp-auth-check' class
+				// Note: the easiest way to test this is to delete all cookies from devtools with an edit window open.
 				var $modal = $('#wp-auth-check-wrap');
 				if ($modal.length) {
 					var visibilityObserver = new MutationObserver(function(mutations) {
 						mutations.forEach(function(mutation) {
-							if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+							if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
 								var $target = $(mutation.target);
-								if ($target.is(':visible') && $target.css('display') !== 'none') {
-									if (typeof wp !== 'undefined' && wp.heartbeat) {
-										wp.heartbeat.interval(86400);
-										console.log('User got logged out (login modal became visible). Heartbeat slowed to 24 hours ("stop" functionality not available).');
+								if (typeof wp !== 'undefined' && wp.heartbeat) {
+									if ( ! $target.hasClass('hidden')) {
+										// Set to maximum allowed interval (3600s = 1 hour)
+										// Note: WordPress core doesn't allow us to stop the heartbeat completely
+										// Also, setting this higher than 1h causes it to revert to the default of 60s
+										// This is the best we can do until WP Core exposes a proper "stop" method for the heartbeat.
+										wp.heartbeat.interval(3600);
+										console.log('User got logged out (login modal became visible). Heartbeat slowed to maximum allowed interval (1 hour).');
+									} else {
+										// Reset to 60s when modal is hidden again (e.g. user logs back in)
+										wp.heartbeat.interval(60);
 									}
 								}
 							}
