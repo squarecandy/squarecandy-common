@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.8](https://github.com/squarecandy/squarecandy-common/compare/v2.0.7...v2.0.8) (2026-05-15)
+
+
+### Bug Fixes
+
+* "stop" heartbeat must fire on removal of `hidden` class; setting to 1 hour is the closest thing to "stop" available currently ([3644b36](https://github.com/squarecandy/squarecandy-common/commit/3644b364dc142ce41afa324dcd4e548ea1adad08))
+* changes for application-core projects ([111efe4](https://github.com/squarecandy/squarecandy-common/commit/111efe4471508b822f5bf51ee6f5ca90a63e63fd))
+* clearer description ([4ed1d93](https://github.com/squarecandy/squarecandy-common/commit/4ed1d93a7523dcc6538287c8113a6ba1d27ae3f0))
+* remove, default is already 60 ([62229f7](https://github.com/squarecandy/squarecandy-common/commit/62229f7f2c4a7fa3213f41995b4840582d3afe54))
+
 ### [2.0.7](https://github.com/squarecandy/squarecandy-common/compare/v2.0.6...v2.0.7) (2026-05-13)
 
 
