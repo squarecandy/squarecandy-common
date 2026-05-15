@@ -373,16 +373,6 @@ endif;
 
 /* Heartbeat API Fixes */
 
-if ( ! function_exists( 'squarecandy_heartbeat_settings' ) ) :
-	// Control WordPress Heartbeat API to prevent excessive admin-ajax.php requests
-	function squarecandy_heartbeat_settings( $settings ) {
-		// Slow down heartbeat to every 60 seconds (default is 15)
-		$settings['interval'] = 60;
-		return $settings;
-	}
-	add_filter( 'heartbeat_settings', 'squarecandy_heartbeat_settings', PHP_INT_MAX - 10 );
-endif;
-
 if ( ! function_exists( 'squarecandy_disable_heartbeat' ) ) :
 	// Disable heartbeat on all post list screens where it's not needed
 	function squarecandy_disable_heartbeat() {
