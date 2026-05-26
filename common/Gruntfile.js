@@ -255,11 +255,11 @@ module.exports = function( grunt ) {
 		run: {
 			stylelintfix: {
 				cmd: 'npx',
-				args: [ 'stylelint', 'css/*.scss', 'css/**/*.scss', '--fix' ],
+				args: [ 'stylelint', 'css/*.scss', 'css/**/*.scss', 'css/*.css', '--fix', '--allow-empty-input' ],
 			},
 			eslintfix: {
 				cmd: 'npx',
-				args: [ 'eslint', 'js/*.js', 'Gruntfile.js', '--fix' ],
+				args: [ 'eslint', 'js/*.js', 'Gruntfile.js', '--fix', '--no-error-on-unmatched-pattern' ],
 			},
 			phpcs: {
 				cmd: 'bash',
