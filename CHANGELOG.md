@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.9](https://github.com/squarecandy/squarecandy-common/compare/v2.0.8...v2.0.9) (2026-05-28)
+
+
+### Bug Fixes
+
+* add raw css as stylintfix target, fix errors when no css or js files ([5f2fa72](https://github.com/squarecandy/squarecandy-common/commit/5f2fa72acded000d1bd6ed973632e742bcd5d35f))
+
 ### [2.0.8](https://github.com/squarecandy/squarecandy-common/compare/v2.0.7...v2.0.8) (2026-05-15)
 
 
