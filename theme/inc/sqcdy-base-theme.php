@@ -480,3 +480,33 @@ function squarecandy_restore_notices_contrast() {
 	</style>
 	<?php
 }
+
+// WordPress 7.0+ Connectors API - block plain-text API key storage in the database.
+// Keys entered via Settings > Connectors are stored as unencrypted plain text in wp_options,
+// exposing them to SQL injection and database-export attacks.
+// Use server-level environment variables or PHP constants in wp-config.php instead —
+// the Connectors API checks those first, bypassing the database entirely.
+// See: https://deliciousbrains.com/securing-connectors-api/
+if ( ! function_exists( 'squarecandy_block_connectors_db_keys' ) ) :
+
+	add_action( 'admin_notices', 'squarecandy_connectors_security_notice' );
+	function squarecandy_connectors_security_notice() {
+		global $pagenow;
+		if ( 'options-connectors.php' !== $pagenow ) {
+			return;
+		}
+		?>
+		<div class="notice notice-error">
+			<p><strong><?php esc_html_e( 'API key storage via this screen is disabled.', 'squarecandy' ); ?></strong></p>
+			<p><?php esc_html_e( 'Saving keys here stores them as plain text in the database, creating a centralized attack surface for SQL injection and database-export leaks.' ); ?></p>
+			<p><?php esc_html_e( 'Store credentials as server-level environment variables or as PHP constants in ', 'squarecandy' ); ?>
+				<code>wp-config.php</code>
+				<?php esc_html_e( ' instead. The Connectors API checks those first, bypassing the database entirely.', 'squarecandy' ); ?>
+			</p>
+			<p><a href="https://deliciousbrains.com/securing-connectors-api/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more: Environment Variables vs. Database: Securing the Connectors API.', 'squarecandy' ); ?></a></p>
+			<p><a href="https://gridpane.com/kb/a-beginners-guide-to-fortress/#vaults-and-pillars" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'For high profile sites, consider using the Vaults and Pillars feature of Fortress on Gridpane.', 'squarecandy' ); ?></a></p>
+		</div>
+		<?php
+		exit;
+	}
+endif;
