@@ -378,7 +378,10 @@ if ( ! function_exists( 'squarecandy_disable_heartbeat' ) ) :
 	function squarecandy_disable_heartbeat() {
 		global $pagenow;
 		// Disable on all post/page/CPT list screens - heartbeat only needed when editing individual posts
+		// Also deregister wp-auth-check since it depends on heartbeat; session-expiry modal is unnecessary
+		// on list screens where no content can be lost.
 		if ( 'edit.php' === $pagenow || 'edit-tags.php' === $pagenow ) {
+			wp_deregister_script( 'wp-auth-check' );
 			wp_deregister_script( 'heartbeat' );
 		}
 	}
