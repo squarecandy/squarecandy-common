@@ -444,3 +444,39 @@ if ( ! function_exists( 'squarecandy_heartbeat_autostop' ) ) :
 endif;
 
 
+// WP 7.0 Admin Color Scheme Fixes
+
+// Restores Fresh as default admin color scheme
+add_filter( 'get_user_option_admin_color', 'squarecandy_user_option_admin_color', 20, 3 );
+function squarecandy_user_option_admin_color( $color, $option, $user ) {
+	if ( empty( $color ) || 'modern' === $color ) {
+		return 'fresh';
+	}
+	return $color;
+}
+
+// remove "Default" (FKA "Modern") from the selectable admin color schemes in user profile settings
+// This is just to reduce confunsion becuase selecting "Default" will automatically switch the user to the "Fresh" color scheme now
+add_action( 'admin_init', 'squarecandy_remove_modern_colorscheme' );
+function squarecandy_remove_modern_colorscheme() {
+	global $_wp_admin_css_colors;
+	if ( isset( $_wp_admin_css_colors['modern'] ) ) {
+		unset( $_wp_admin_css_colors['modern'] );
+	}
+}
+
+// restore the older admin notice styles
+// contrast on the WP 7.0+ notices is horrible.
+add_action( 'admin_head', 'squarecandy_restore_notices_contrast' );
+function squarecandy_restore_notices_contrast() {
+	?>
+	<style>
+	.notice,div.error,div.updated {
+		background: #fff;
+		border-block: 1px solid #c3c4c7;
+		border-right: 1px solid #c3c4c7;
+		box-shadow: 0 1px 1px rgba(0,0,0,.04);
+	}
+	</style>
+	<?php
+}
