@@ -373,23 +373,7 @@ endif;
 
 /* Heartbeat API Fixes */
 
-if ( ! function_exists( 'squarecandy_disable_heartbeat' ) ) :
-	// Disable heartbeat on all post list screens where it's not needed
-	function squarecandy_disable_heartbeat() {
-		global $pagenow;
-		// Disable on all post/page/CPT list screens - heartbeat only needed when editing individual posts
-		// Also deregister wp-auth-check since it depends on heartbeat; session-expiry modal is unnecessary
-		// on list screens where no content can be lost.
-		if ( 'edit.php' === $pagenow || 'edit-tags.php' === $pagenow ) {
-			wp_deregister_script( 'wp-auth-check' );
-			wp_deregister_script( 'heartbeat' );
-		}
-	}
-	add_action( 'admin_enqueue_scripts', 'squarecandy_disable_heartbeat', 999 );
-endif;
-
-// Disable SearchWP's admin bar heartbeat integration on all wp-admin pages
-// (Note: The 10-second heartbeat interval on post.php is from WordPress core's post lock detection, not SearchWP)
+// Disable SearchWP's admin bar (includes heartbeat integration on all pages)
 add_filter( 'searchwp\admin_bar', '__return_false' );
 
 if ( ! function_exists( 'squarecandy_heartbeat_autostop' ) ) :
