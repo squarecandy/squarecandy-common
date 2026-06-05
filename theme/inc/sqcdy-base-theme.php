@@ -497,3 +497,10 @@ if ( ! function_exists( 'squarecandy_block_connectors_db_keys' ) ) :
 		exit;
 	}
 endif;
+
+// Disable WP 7.0+ Command Palette
+add_action( 'init', 'squarecandy_disable_command_palette' );
+function squarecandy_disable_command_palette() {
+	remove_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
+	remove_action( 'admin_bar_menu', 'wp_admin_bar_command_palette_menu', 55 );
+}
