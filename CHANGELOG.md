@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.11](https://github.com/squarecandy/squarecandy-common/compare/v2.0.10...v2.0.11) (2026-06-10)
+
+
+### Bug Fixes
+
+* add missing wp 7 admin theme css variables ([4a07f4a](https://github.com/squarecandy/squarecandy-common/commit/4a07f4a285badccaa09e8dc848e0dc090e76393d))
+* add one more variable ([ede2c75](https://github.com/squarecandy/squarecandy-common/commit/ede2c75758aa716fe270cf86090f7cb6cfe45168))
+
 ### [2.0.10](https://github.com/squarecandy/squarecandy-common/compare/v2.0.9...v2.0.10) (2026-06-09)
 
 
