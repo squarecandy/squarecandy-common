@@ -469,6 +469,7 @@ function squarecandy_restore_notices_contrast() {
 		--wp-admin-theme-color: #2271b1;
 		--wp-admin-theme-color-darker-10: #135e96;
 		--wp-admin-theme-color-darker-20: #0a4b78;
+		--wp-admin-theme-color--rgb: 34, 113, 177;
 	}
 	</style>
 	<?php
