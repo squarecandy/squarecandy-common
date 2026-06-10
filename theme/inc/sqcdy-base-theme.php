@@ -454,6 +454,7 @@ function squarecandy_remove_modern_colorscheme() {
 
 // restore the older admin notice styles
 // contrast on the WP 7.0+ notices is horrible.
+// also add missing fresh color scheme css variables
 add_action( 'admin_head', 'squarecandy_restore_notices_contrast' );
 function squarecandy_restore_notices_contrast() {
 	?>
