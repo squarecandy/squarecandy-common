@@ -462,45 +462,34 @@ function squarecandy_remove_modern_colorscheme_on_login( $classes ) {
 }
 add_filter( 'login_body_class', 'squarecandy_remove_modern_colorscheme_on_login' );
 
-// define missing css variables
-$squarecandy_admin_css_variables = 'body.admin-color-fresh {
-	--wp-admin-theme-color: #2271b1;
-	--wp-admin-theme-color-darker-10: #135e96;
-	--wp-admin-theme-color-darker-20: #0a4b78;
-	--wp-admin-theme-color--rgb: 34, 113, 177;
-	}';
 
 // restore the older admin notice styles
 // contrast on the WP 7.0+ notices is horrible.
 // also add missing fresh color scheme css variables
-add_action( 'admin_head', 'squarecandy_restore_notices_contrast' );
-function squarecandy_restore_notices_contrast() {
-	global $squarecandy_admin_css_variables;
+add_action( 'admin_head', 'squarecandy_restore_admin_colors' );
+// also change colors on login screen
+add_action( 'login_head', 'squarecandy_restore_admin_colors' );
+
+function squarecandy_restore_admin_colors() {
 	?>
 	<style>
-	.notice,div.error,div.updated {
+	.notice,div.error,div.updated,#login .notice,#login .message,#login .error {
 		background: #fff;
 		border-block: 1px solid #c3c4c7;
 		border-right: 1px solid #c3c4c7;
 		box-shadow: 0 1px 1px rgba(0,0,0,.04);
 	}
-	<?php echo $squarecandy_admin_css_variables; ?>
+	body.admin-color-fresh {
+		--wp-admin-theme-color: #2271b1;
+		--wp-admin-theme-color-darker-10: #135e96;
+		--wp-admin-theme-color-darker-20: #0a4b78;
+		--wp-admin-theme-color--rgb: 34, 113, 177;
+	}
+	.login .message, .login .notice, .login .success {
+		border-left-color: var(--wp-admin-theme-color);
+	}
 	</style>
 	<?php
-}
-
-// also change colors on login screen
-add_action( 'login_head', 'squarecandy_restore_admin_variables' );
-function squarecandy_restore_admin_variables() { 
-	global $squarecandy_admin_css_variables;
-		?>
-		<style>
-		<?php echo $squarecandy_admin_css_variables; ?>
-		.login .message, .login .notice, .login .success {
-			border-left-color: var(--wp-admin-theme-color);
-		}
-		</style>
-		<?php
 }
 
 // WordPress 7.0+ Connectors API - block plain-text API key storage in the database.
