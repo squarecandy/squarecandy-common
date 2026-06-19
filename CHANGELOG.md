@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.12](https://github.com/squarecandy/squarecandy-common/compare/v2.0.11...v2.0.12) (2026-06-19)
+
+
+### Bug Fixes
+
+* fix admin colors on login page ([eafbef7](https://github.com/squarecandy/squarecandy-common/commit/eafbef7f9b03f6d9892ede279e6bce86f1824e82))
+* update second version number in package lock file ([6df5669](https://github.com/squarecandy/squarecandy-common/commit/6df56695dcebe4932b976252ee512abfccf39d50))
+* use same function in admin and login ([d9a9b08](https://github.com/squarecandy/squarecandy-common/commit/d9a9b08477fe7fcb3ce74c40cef111d9454fbd2b))
+
 ### [2.0.11](https://github.com/squarecandy/squarecandy-common/compare/v2.0.10...v2.0.11) (2026-06-10)
 
 
