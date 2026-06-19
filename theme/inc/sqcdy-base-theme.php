@@ -454,8 +454,8 @@ function squarecandy_remove_modern_colorscheme() {
 
 // wp-login is always admin-color-modern - filter that as well
 function squarecandy_remove_modern_colorscheme_on_login( $classes ) {
-	$modern = array_search( 'admin-color-modern', $classes );
-	if ( $modern !== false ) {
+	$modern = array_search( 'admin-color-modern', $classes, true );
+	if ( false !== $modern ) {
 		$classes[ $modern ] = 'admin-color-fresh';
 	}
 	return $classes;
