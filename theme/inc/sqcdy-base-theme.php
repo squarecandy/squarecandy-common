@@ -454,9 +454,11 @@ function squarecandy_remove_modern_colorscheme() {
 
 // wp-login is always admin-color-modern - filter that as well
 function squarecandy_remove_modern_colorscheme_on_login( $classes ) {
-	$modern = array_search( 'admin-color-modern', $classes );
-	if ( $modern !== false ) {
+	$modern = array_search( 'admin-color-modern', $classes, true );
+	if ( false !== $modern ) {
 		$classes[ $modern ] = 'admin-color-fresh';
+	} else { // on login error?
+		$classes[] = 'admin-color-fresh';
 	}
 	return $classes;
 }
@@ -485,7 +487,7 @@ function squarecandy_restore_admin_colors() {
 		--wp-admin-theme-color-darker-20: #0a4b78;
 		--wp-admin-theme-color--rgb: 34, 113, 177;
 	}
-	.login .message, .login .notice, .login .success {
+	.login .message, .login .notice:not(.notice-error), .login .success {
 		border-left-color: var(--wp-admin-theme-color);
 	}
 	</style>

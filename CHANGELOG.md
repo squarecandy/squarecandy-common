@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.14](https://github.com/squarecandy/squarecandy-common/compare/v2.0.13...v2.0.14) (2026-06-23)
+
+
+### Bug Fixes
+
+* adjust login page css ([b5d6f2c](https://github.com/squarecandy/squarecandy-common/commit/b5d6f2c1e3c3887981192e1844cb327ce96d5cae))
+
+### [2.0.13](https://github.com/squarecandy/squarecandy-common/compare/v2.0.12...v2.0.13) (2026-06-19)
+
 ### [2.0.12](https://github.com/squarecandy/squarecandy-common/compare/v2.0.11...v2.0.12) (2026-06-19)
 
 
