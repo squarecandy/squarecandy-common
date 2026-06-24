@@ -6,6 +6,9 @@
 	"standard-version": {
 		"skip": {
 			"tag": false
+		},
+		"scripts": {
+			"precommit": "npm install --package-lock-only -s"
 		}
 	},
 	"devDependencies": {

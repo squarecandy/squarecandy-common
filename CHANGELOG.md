@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.12](https://github.com/squarecandy/squarecandy-common/compare/v2.0.11...v2.0.12) (2026-06-19)
+
+
+### Bug Fixes
+
+* fix admin colors on login page ([eafbef7](https://github.com/squarecandy/squarecandy-common/commit/eafbef7f9b03f6d9892ede279e6bce86f1824e82))
+* update second version number in package lock file ([6df5669](https://github.com/squarecandy/squarecandy-common/commit/6df56695dcebe4932b976252ee512abfccf39d50))
+* use same function in admin and login ([d9a9b08](https://github.com/squarecandy/squarecandy-common/commit/d9a9b08477fe7fcb3ce74c40cef111d9454fbd2b))
+
+### [2.0.11](https://github.com/squarecandy/squarecandy-common/compare/v2.0.10...v2.0.11) (2026-06-10)
+
+
+### Bug Fixes
+
+* add missing wp 7 admin theme css variables ([4a07f4a](https://github.com/squarecandy/squarecandy-common/commit/4a07f4a285badccaa09e8dc848e0dc090e76393d))
+* add one more variable ([ede2c75](https://github.com/squarecandy/squarecandy-common/commit/ede2c75758aa716fe270cf86090f7cb6cfe45168))
+
+### [2.0.10](https://github.com/squarecandy/squarecandy-common/compare/v2.0.9...v2.0.10) (2026-06-09)
+
+
+### Bug Fixes
+
+* back out disabling heartbeat on CPT listing pages ([556cc3b](https://github.com/squarecandy/squarecandy-common/commit/556cc3b1e2327dc80bb6928011634c427aa8f391))
+* disable AI connectors UI screen that encourages storing keys in the db ([20f6feb](https://github.com/squarecandy/squarecandy-common/commit/20f6feb2ae192052b4083963e48429a6edfab418))
+* revert admin style changes in WP 7.0 ([6da9e53](https://github.com/squarecandy/squarecandy-common/commit/6da9e5390da755404f5aca232d9aad69c3b099f1))
+* totally remove command palette ([1a840a0](https://github.com/squarecandy/squarecandy-common/commit/1a840a074a5ce59d40623720709524bf34e44998))
+* wp-auth-check throws errors when heartbeat is totally disabled ([71fb327](https://github.com/squarecandy/squarecandy-common/commit/71fb32728215e421aa9941fbd5751c7990ed83fb))
+
 ### [2.0.9](https://github.com/squarecandy/squarecandy-common/compare/v2.0.8...v2.0.9) (2026-05-28)
 
 
