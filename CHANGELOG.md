@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.15](https://github.com/squarecandy/squarecandy-common/compare/v2.0.14...v2.0.15) (2026-06-24)
+
+
+### Bug Fixes
+
+* add slack notification to deploy action ([a9d627d](https://github.com/squarecandy/squarecandy-common/commit/a9d627d72cf6b5e1a46fd513df1f05c9c1557fb9))
+* error in deploy action ([3904a63](https://github.com/squarecandy/squarecandy-common/commit/3904a63d23fd11171764e19aa78059ac468f005c))
+* release is not a good event for production trigger. Use tags with "v" instead ([02602d1](https://github.com/squarecandy/squarecandy-common/commit/02602d1516c44f4739262d057d627e30981a8625))
+
 ### [2.0.14](https://github.com/squarecandy/squarecandy-common/compare/v2.0.13...v2.0.14) (2026-06-23)
 
 
