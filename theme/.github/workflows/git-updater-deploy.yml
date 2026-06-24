@@ -1,0 +1,58 @@
+name: Git Updater Deploy
+
+# Copy this file into each theme repo. No configuration needed beyond secrets.
+# Fires the production release hook ONCE on release published to the main branch.
+# Fires the staging release hook ONCE on push to develop branch only. Other branch pushes are ignored.
+# Theme slug and default branch are detected automatically from the repo.
+#
+# Required secrets (set in each theme repo):
+#   GIT_UPDATER_KEY   git-updater API key
+#   PROD_SITE_URL     https://example.com
+#   STAGING_SITE_URL  https://staging.example.com
+
+
+on:
+  release:
+    types: [published] # required so that the workflow only runs once per release, not 3 times (created, released, published)
+  push:
+    branches:
+      - develop # filters for pushes only to the develop branch, so other branch pushes don't trigger the staging hook
+
+jobs:
+
+  deploy-production:
+    if: github.event_name == 'release'
+    name: Notify Production (git-updater)
+    runs-on: ubuntu-latest
+    env:
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
+      PROD_SITE_URL: ${{ secrets.PROD_SITE_URL }}
+    steps:
+      - name: Trigger git-updater on production
+        run: |
+          if [[ -z "${GIT_UPDATER_KEY}" || -z "${PROD_SITE_URL}" ]]; then
+            echo "Git Updater secrets not configured for this repo — skipping."
+            exit 0
+          fi
+          THEME="${{ github.event.repository.name }}"
+          BRANCH="${{ github.event.repository.default_branch }}"
+          URL="${PROD_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=${BRANCH}&override=true"
+          curl -sSL --fail-with-body "${URL}"
+
+  deploy-staging:
+    if: github.event_name == 'push'
+    name: Notify Staging (git-updater)
+    runs-on: ubuntu-latest
+    env:
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
+      STAGING_SITE_URL: ${{ secrets.STAGING_SITE_URL }}
+    steps:
+      - name: Trigger git-updater on staging
+        run: |
+          if [[ -z "${GIT_UPDATER_KEY}" || -z "${STAGING_SITE_URL}" ]]; then
+            echo "Git Updater secrets not configured for this repo — skipping."
+            exit 0
+          fi
+          THEME="${{ github.event.repository.name }}"
+          URL="${STAGING_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=develop&override=true"
+          curl -sSL --fail-with-body "${URL}"
