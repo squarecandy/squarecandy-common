@@ -6,9 +6,10 @@ name: Git Updater Deploy
 # Theme slug and default branch are detected automatically from the repo.
 #
 # Required secrets (set in each theme repo):
-#   GIT_UPDATER_KEY   git-updater API key
-#   PROD_SITE_URL     https://example.com
-#   STAGING_SITE_URL  https://staging.example.com
+#   GIT_UPDATER_KEY        git-updater API key
+#   PROD_SITE_URL           https://example.com
+#   STAGING_SITE_URL        https://staging.example.com
+#   SLACK_DEPLOY_WEBHOOK    Slack incoming webhook URL (optional, set at squarecandy organization level for all repos)
 
 
 on:
@@ -46,6 +47,24 @@ jobs:
           cat /tmp/gu_response.txt
           [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
 
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REPO: ${{ github.event.repository.name }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          [[ -z "${SLACK_WEBHOOK}" ]] && exit 0
+          if [[ "${JOB_STATUS}" == "success" ]]; then
+            TEXT=":white_check_mark: *${REPO}* production deploy succeeded — ${TAG} — <${RUN_URL}|view run>"
+          else
+            TEXT=":x: *${REPO}* production deploy FAILED — ${TAG} — <${RUN_URL}|view run>"
+          fi
+          curl -sSL -X POST -H "Content-Type: application/json" \
+            --data "{\"text\":\"${TEXT}\"}" "${SLACK_WEBHOOK}"
+
   deploy-staging:
     if: github.ref == 'refs/heads/develop'
     name: Notify Staging (git-updater)
@@ -70,3 +89,20 @@ jobs:
             -o /tmp/gu_response.txt -w "%{http_code}" "${URL}")
           cat /tmp/gu_response.txt
           [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
+
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          [[ -z "${SLACK_WEBHOOK}" ]] && exit 0
+          if [[ "${JOB_STATUS}" == "success" ]]; then
+            TEXT=":white_check_mark: *${REPO}* staging deploy succeeded — <${RUN_URL}|view run>"
+          else
+            TEXT=":x: *${REPO}* staging deploy FAILED — <${RUN_URL}|view run>"
+          fi
+          curl -sSL -X POST -H "Content-Type: application/json" \
+            --data "{\"text\":\"${TEXT}\"}" "${SLACK_WEBHOOK}"
