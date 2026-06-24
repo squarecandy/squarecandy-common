@@ -12,16 +12,16 @@ name: Git Updater Deploy
 
 
 on:
-  release:
-    types: [published] # required so that the workflow only runs once per release, not 3 times (created, released, published)
   push:
     branches:
-      - develop # filters for pushes only to the develop branch, so other branch pushes don't trigger the staging hook
+      - develop # staging: pushes to develop only
+    tags:
+      - 'v*'   # production: version tag pushes
 
 jobs:
 
   deploy-production:
-    if: github.event_name == 'release'
+    if: startsWith(github.ref, 'refs/tags/v')
     name: Notify Production (git-updater)
     runs-on: ubuntu-latest
     env:
@@ -37,10 +37,17 @@ jobs:
           THEME="${{ github.event.repository.name }}"
           BRANCH="${{ github.event.repository.default_branch }}"
           URL="${PROD_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=${BRANCH}&override=true"
-          curl -sSL --fail-with-body "${URL}"
+          HTTP_STATUS=$(curl -sSL --http1.1 -X POST \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -H "User-Agent: GitHub-Hookshot/squarecandy" \
+            -H "X-GitHub-Event: release" \
+            --data "payload={}" \
+            -o /tmp/gu_response.txt -w "%{http_code}" "${URL}")
+          cat /tmp/gu_response.txt
+          [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
 
   deploy-staging:
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/develop'
     name: Notify Staging (git-updater)
     runs-on: ubuntu-latest
     env:
@@ -55,4 +62,11 @@ jobs:
           fi
           THEME="${{ github.event.repository.name }}"
           URL="${STAGING_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=develop&override=true"
-          curl -sSL --fail-with-body "${URL}"
+          HTTP_STATUS=$(curl -sSL --http1.1 -X POST \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -H "User-Agent: GitHub-Hookshot/squarecandy" \
+            -H "X-GitHub-Event: push" \
+            --data "payload={}" \
+            -o /tmp/gu_response.txt -w "%{http_code}" "${URL}")
+          cat /tmp/gu_response.txt
+          [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
