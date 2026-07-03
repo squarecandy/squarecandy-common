@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.16](https://github.com/squarecandy/squarecandy-common/compare/v2.0.15...v2.0.16) (2026-07-03)
+
+
+### Bug Fixes
+
+* allow all bash vars to be github secret or variable ([0847154](https://github.com/squarecandy/squarecandy-common/commit/08471547a538670c4e1dd7aaa88f6ccd5c7871ae))
+* show more detailed skip/error state responses in slack, and better debugging in Actions ([3e13268](https://github.com/squarecandy/squarecandy-common/commit/3e132683cdf1f16c3bf40e3102f9a8fb9061e857))
+
 ### [2.0.15](https://github.com/squarecandy/squarecandy-common/compare/v2.0.14...v2.0.15) (2026-06-24)
 
 
