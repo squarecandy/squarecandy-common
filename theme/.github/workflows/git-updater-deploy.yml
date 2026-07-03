@@ -5,7 +5,7 @@ name: Git Updater Deploy
 # Fires the staging release hook ONCE on push to develop branch only. Other branch pushes are ignored.
 # Theme slug and default branch are detected automatically from the repo.
 #
-# Required secrets (set in each theme repo):
+# Required secrets / variables (set in each theme repo):
 #   GIT_UPDATER_KEY        git-updater API key
 #   PROD_SITE_URL           https://example.com
 #   STAGING_SITE_URL        https://staging.example.com
@@ -26,8 +26,8 @@ jobs:
     name: Notify Production (git-updater)
     runs-on: ubuntu-latest
     env:
-      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
-      PROD_SITE_URL: ${{ secrets.PROD_SITE_URL }}
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY || vars.GIT_UPDATER_KEY }}
+      PROD_SITE_URL: ${{ secrets.PROD_SITE_URL || vars.PROD_SITE_URL }}
     steps:
       - name: Trigger git-updater on production
         run: |
@@ -50,7 +50,7 @@ jobs:
       - name: Notify Slack
         if: always()
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK || vars.SLACK_DEPLOY_WEBHOOK }}
           JOB_STATUS: ${{ job.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           REPO: ${{ github.event.repository.name }}
@@ -70,8 +70,8 @@ jobs:
     name: Notify Staging (git-updater)
     runs-on: ubuntu-latest
     env:
-      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
-      STAGING_SITE_URL: ${{ secrets.STAGING_SITE_URL }}
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY || vars.GIT_UPDATER_KEY }}
+      STAGING_SITE_URL: ${{ secrets.STAGING_SITE_URL || vars.STAGING_SITE_URL }}
     steps:
       - name: Trigger git-updater on staging
         run: |
@@ -93,7 +93,7 @@ jobs:
       - name: Notify Slack
         if: always()
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK || vars.SLACK_DEPLOY_WEBHOOK }}
           JOB_STATUS: ${{ job.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           REPO: ${{ github.event.repository.name }}
