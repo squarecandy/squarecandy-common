@@ -1,15 +1,15 @@
 name: Git Updater Deploy
 
-# Copy this file into each theme repo. No configuration needed beyond secrets.
+# Copy this file into each theme repo after running server-scripts/local-tools/webhooks-to-actions.
 # Fires the production release hook ONCE on release published to the main branch.
 # Fires the staging release hook ONCE on push to develop branch only. Other branch pushes are ignored.
 # Theme slug and default branch are detected automatically from the repo.
 #
-# Required secrets / variables (set in each theme repo):
-#   GIT_UPDATER_KEY        git-updater API key
-#   PROD_SITE_URL           https://example.com
-#   STAGING_SITE_URL        https://staging.example.com
-#   SLACK_DEPLOY_WEBHOOK    Slack incoming webhook URL (optional, set at squarecandy organization level for all repos)
+# Required configuration:
+#   secret: GIT_UPDATER_KEY        git-updater API key
+#   var:    PROD_SITE_URL          https://example.com
+#   var:    STAGING_SITE_URL       https://staging.example.com
+#   secret: SLACK_DEPLOY_WEBHOOK   Slack incoming webhook URL (organization-level)
 
 
 on:
@@ -26,83 +26,171 @@ jobs:
     name: Notify Production (git-updater)
     runs-on: ubuntu-latest
     env:
-      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY || vars.GIT_UPDATER_KEY }}
-      PROD_SITE_URL: ${{ secrets.PROD_SITE_URL || vars.PROD_SITE_URL }}
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
+      PROD_SITE_URL: ${{ vars.PROD_SITE_URL }}
     steps:
       - name: Trigger git-updater on production
+        id: trigger_production
         run: |
+          DEPLOY_STATUS="success"
+          DEPLOY_MESSAGE=""
+
           if [[ -z "${GIT_UPDATER_KEY}" || -z "${PROD_SITE_URL}" ]]; then
-            echo "Git Updater secrets not configured for this repo — skipping."
+            DEPLOY_STATUS="skipped"
+            DEPLOY_MESSAGE="Missing required config: GIT_UPDATER_KEY or PROD_SITE_URL"
+            {
+              echo "deploy_status=${DEPLOY_STATUS}"
+              echo "deploy_message<<EOF"
+              echo "${DEPLOY_MESSAGE}"
+              echo "EOF"
+            } >> "${GITHUB_OUTPUT}"
+            echo "${DEPLOY_MESSAGE}"
             exit 0
           fi
+
           THEME="${{ github.event.repository.name }}"
           BRANCH="${{ github.event.repository.default_branch }}"
-          URL="${PROD_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=${BRANCH}&override=true"
+          BASE_URL="${PROD_SITE_URL%/}"
+          if [[ "${BASE_URL}" != http://* && "${BASE_URL}" != https://* ]]; then
+            BASE_URL="https://${BASE_URL}"
+          fi
+          URL="${BASE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=${BRANCH}&override=true"
+          set +e
           HTTP_STATUS=$(curl -sSL --http1.1 -X POST \
             -H "Content-Type: application/x-www-form-urlencoded" \
-            -H "User-Agent: GitHub-Hookshot/squarecandy" \
+            -H "User-Agent: GitHub-Hookshot" \
             -H "X-GitHub-Event: release" \
             --data "payload={}" \
-            -o /tmp/gu_response.txt -w "%{http_code}" "${URL}")
-          cat /tmp/gu_response.txt
-          [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
+            -o /tmp/gu_response.txt -w "%{http_code}" -- "${URL}")
+          CURL_EXIT=$?
+          set -e
+          RESPONSE=$(cat /tmp/gu_response.txt 2>/dev/null || true)
+          echo "${RESPONSE}"
+
+          if [[ "${CURL_EXIT}" -ne 0 ]]; then
+            DEPLOY_STATUS="error"
+            DEPLOY_MESSAGE="git-updater webhook request failed (curl exit ${CURL_EXIT})"
+          elif [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]]; then
+            DEPLOY_STATUS="success"
+            DEPLOY_MESSAGE="git-updater webhook succeeded (HTTP ${HTTP_STATUS})"
+          else
+            DEPLOY_STATUS="error"
+            DEPLOY_MESSAGE="git-updater webhook failed (HTTP ${HTTP_STATUS}): ${RESPONSE}"
+          fi
+
+          {
+            echo "deploy_status=${DEPLOY_STATUS}"
+            echo "deploy_message<<EOF"
+            echo "${DEPLOY_MESSAGE}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+          [[ "${DEPLOY_STATUS}" == "success" ]] || { echo "${DEPLOY_MESSAGE}"; exit 1; }
 
       - name: Notify Slack
         if: always()
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK || vars.SLACK_DEPLOY_WEBHOOK }}
-          JOB_STATUS: ${{ job.status }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          DEPLOY_STATUS: ${{ steps.trigger_production.outputs.deploy_status }}
+          DEPLOY_MESSAGE: ${{ steps.trigger_production.outputs.deploy_message }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           REPO: ${{ github.event.repository.name }}
           TAG: ${{ github.ref_name }}
         run: |
           [[ -z "${SLACK_WEBHOOK}" ]] && exit 0
-          if [[ "${JOB_STATUS}" == "success" ]]; then
-            TEXT=":white_check_mark: *${REPO}* production deploy succeeded — ${TAG} — <${RUN_URL}|view run>"
+          if [[ "${DEPLOY_STATUS}" == "success" ]]; then
+            TEXT=":white_check_mark: *${REPO}* production deploy succeeded — ${TAG} — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
+          elif [[ "${DEPLOY_STATUS}" == "skipped" ]]; then
+            TEXT=":warning: *${REPO}* production deploy skipped — ${TAG} — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
           else
-            TEXT=":x: *${REPO}* production deploy FAILED — ${TAG} — <${RUN_URL}|view run>"
+            TEXT=":x: *${REPO}* production deploy failed — ${TAG} — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
           fi
+          TEXT_JSON=${TEXT//\"/\\\"}
           curl -sSL -X POST -H "Content-Type: application/json" \
-            --data "{\"text\":\"${TEXT}\"}" "${SLACK_WEBHOOK}"
+            --data "{\"text\":\"${TEXT_JSON}\"}" "${SLACK_WEBHOOK}"
 
   deploy-staging:
     if: github.ref == 'refs/heads/develop'
     name: Notify Staging (git-updater)
     runs-on: ubuntu-latest
     env:
-      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY || vars.GIT_UPDATER_KEY }}
-      STAGING_SITE_URL: ${{ secrets.STAGING_SITE_URL || vars.STAGING_SITE_URL }}
+      GIT_UPDATER_KEY: ${{ secrets.GIT_UPDATER_KEY }}
+      STAGING_SITE_URL: ${{ vars.STAGING_SITE_URL }}
     steps:
       - name: Trigger git-updater on staging
+        id: trigger_staging
         run: |
+          DEPLOY_STATUS="success"
+          DEPLOY_MESSAGE=""
+
           if [[ -z "${GIT_UPDATER_KEY}" || -z "${STAGING_SITE_URL}" ]]; then
-            echo "Git Updater secrets not configured for this repo — skipping."
+            DEPLOY_STATUS="skipped"
+            DEPLOY_MESSAGE="Missing required config: GIT_UPDATER_KEY or STAGING_SITE_URL"
+            {
+              echo "deploy_status=${DEPLOY_STATUS}"
+              echo "deploy_message<<EOF"
+              echo "${DEPLOY_MESSAGE}"
+              echo "EOF"
+            } >> "${GITHUB_OUTPUT}"
+            echo "${DEPLOY_MESSAGE}"
             exit 0
           fi
+
           THEME="${{ github.event.repository.name }}"
-          URL="${STAGING_SITE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=develop&override=true"
+          BASE_URL="${STAGING_SITE_URL%/}"
+          if [[ "${BASE_URL}" != http://* && "${BASE_URL}" != https://* ]]; then
+            BASE_URL="https://${BASE_URL}"
+          fi
+          URL="${BASE_URL}/wp-json/git-updater/v1/update/?key=${GIT_UPDATER_KEY}&theme=${THEME}&branch=develop&override=true"
+          set +e
           HTTP_STATUS=$(curl -sSL --http1.1 -X POST \
             -H "Content-Type: application/x-www-form-urlencoded" \
-            -H "User-Agent: GitHub-Hookshot/squarecandy" \
+            -H "User-Agent: GitHub-Hookshot" \
             -H "X-GitHub-Event: push" \
             --data "payload={}" \
-            -o /tmp/gu_response.txt -w "%{http_code}" "${URL}")
-          cat /tmp/gu_response.txt
-          [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]] || { echo "Error: HTTP ${HTTP_STATUS}"; exit 1; }
+            -o /tmp/gu_response.txt -w "%{http_code}" -- "${URL}")
+          CURL_EXIT=$?
+          set -e
+          RESPONSE=$(cat /tmp/gu_response.txt 2>/dev/null || true)
+          echo "${RESPONSE}"
+
+          if [[ "${CURL_EXIT}" -ne 0 ]]; then
+            DEPLOY_STATUS="error"
+            DEPLOY_MESSAGE="git-updater webhook request failed (curl exit ${CURL_EXIT})"
+          elif [[ "${HTTP_STATUS}" -ge 200 && "${HTTP_STATUS}" -lt 300 ]]; then
+            DEPLOY_STATUS="success"
+            DEPLOY_MESSAGE="git-updater webhook succeeded (HTTP ${HTTP_STATUS})"
+          else
+            DEPLOY_STATUS="error"
+            DEPLOY_MESSAGE="git-updater webhook failed (HTTP ${HTTP_STATUS}): ${RESPONSE}"
+          fi
+
+          {
+            echo "deploy_status=${DEPLOY_STATUS}"
+            echo "deploy_message<<EOF"
+            echo "${DEPLOY_MESSAGE}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+          [[ "${DEPLOY_STATUS}" == "success" ]] || { echo "${DEPLOY_MESSAGE}"; exit 1; }
 
       - name: Notify Slack
         if: always()
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK || vars.SLACK_DEPLOY_WEBHOOK }}
-          JOB_STATUS: ${{ job.status }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOY_WEBHOOK }}
+          DEPLOY_STATUS: ${{ steps.trigger_staging.outputs.deploy_status }}
+          DEPLOY_MESSAGE: ${{ steps.trigger_staging.outputs.deploy_message }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           REPO: ${{ github.event.repository.name }}
         run: |
           [[ -z "${SLACK_WEBHOOK}" ]] && exit 0
-          if [[ "${JOB_STATUS}" == "success" ]]; then
-            TEXT=":white_check_mark: *${REPO}* staging deploy succeeded — <${RUN_URL}|view run>"
+          if [[ "${DEPLOY_STATUS}" == "success" ]]; then
+            TEXT=":white_check_mark: *${REPO}* staging deploy succeeded — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
+          elif [[ "${DEPLOY_STATUS}" == "skipped" ]]; then
+            TEXT=":warning: *${REPO}* staging deploy skipped — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
           else
-            TEXT=":x: *${REPO}* staging deploy FAILED — <${RUN_URL}|view run>"
+            TEXT=":x: *${REPO}* staging deploy failed — ${DEPLOY_MESSAGE} — <${RUN_URL}|view run>"
           fi
+          TEXT_JSON=${TEXT//\"/\\\"}
           curl -sSL -X POST -H "Content-Type: application/json" \
-            --data "{\"text\":\"${TEXT}\"}" "${SLACK_WEBHOOK}"
+            --data "{\"text\":\"${TEXT_JSON}\"}" "${SLACK_WEBHOOK}"
