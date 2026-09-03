@@ -151,6 +151,7 @@ Example file as follows: (nb must be valid json so if copying below, delete the 
 	],
 	"copyCycle2": false, // whether to copy over cycle2 files
 	"copyMagnific": false, // whether to copy over magnific files
+	"skipGitUpdaterDeploy": false, // theme only: if true, don't copy .github/workflows/git-updater-deploy.yml (e.g. for base themes that aren't deployed on via GitHub Actions)
 	"customGruntfile": false, // if true don't copy over Gruntfile.js
 	"customPackageJson": false, // if true don't copy over package.json
 	"customComposerJson": false, // if true don't copy over composer.json

@@ -10,6 +10,7 @@
 	"copyCycle2": false,
 	"copyMagnific": false,
 	"copyMixitup": false,
+	"skipGitUpdaterDeploy": false,
 	"customGruntfile": false,
 	"customPackageJson": false,
 	"customComposerJson": false,

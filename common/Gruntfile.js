@@ -69,6 +69,13 @@ module.exports = function( grunt ) {
 				src: '**/*',
 				dest: '',
 				dot: true,
+				// base themes aren't deployed on their own, so they don't need the git-updater webhook
+				filter: function( filepath ) {
+					if ( filepath.includes( '.github/workflows/git-updater-deploy.yml' ) ) {
+						return ! settings.skipGitUpdaterDeploy;
+					}
+					return true;
+				},
 			},
 		];
 		copyFiles = copyFiles.concat( themeOrPluginFiles );
