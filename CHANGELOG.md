@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.18](https://github.com/squarecandy/squarecandy-common/compare/v2.0.17...v2.0.18) (2026-09-03)
+
+
+### Bug Fixes
+
+* allow skipping copying the git-updater-deploy action (for base themes) ([d0bb6a9](https://github.com/squarecandy/squarecandy-common/commit/d0bb6a98a08b9f462444d1ff880085c87d7f2b8b))
+
 ### [2.0.17](https://github.com/squarecandy/squarecandy-common/compare/v2.0.16...v2.0.17) (2026-09-03)
 
 
