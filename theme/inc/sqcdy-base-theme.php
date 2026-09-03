@@ -530,3 +530,100 @@ function squarecandy_disable_command_palette() {
 	remove_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
 	remove_action( 'admin_bar_menu', 'wp_admin_bar_command_palette_menu', 55 );
 }
+
+
+//// WPForms ////
+
+/**
+ * WPForms is stripping all tags from HTML and Rich Text fields when used
+ * in combination with DISALLOW_UNFILTERED_HTML.
+ *
+ * Re-inject wp_kses_post()-sanitized markup for content-style WPForms fields
+ * that were fully stripped by WPForms' own "no unfiltered_html" protection.
+ *
+ * @param array $form Post data about to be passed to wp_update_post().
+ * @param array $data Fully processed (and, for non-unfiltered_html users, tag-stripped) form data.
+ *
+ * @return array
+ */
+function tod_wpforms_allow_safe_html_in_content_fields( $form, $data ) {
+
+	// Nothing to fix if this user is actually allowed unfiltered HTML.
+	if ( current_user_can( 'unfiltered_html' ) ) {
+		return $form;
+	}
+
+	// Nonce is already verified by WPForms' own wpforms_save_form() handler before this filter runs.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $_POST['data'] ) || empty( $form['post_content'] ) || ! function_exists( 'wpforms_prepare_form_data' ) ) {
+		return $form;
+	}
+
+	// Reconstruct the original, unstripped submission from the raw builder POST payload.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
+	$form_post = json_decode( wp_unslash( $_POST['data'] ), false );
+	$raw_data  = wpforms_prepare_form_data( $form_post );
+
+	if ( empty( $raw_data['fields'] ) ) {
+		return $form;
+	}
+
+	$decoded = json_decode( wp_unslash( $form['post_content'] ), true );
+
+	if ( empty( $decoded['fields'] ) ) {
+		return $form;
+	}
+
+	// Field type => the option key holding its HTML content.
+	$content_field_keys = array(
+		'html'     => 'code',
+		'content'  => 'content',
+		'richtext' => 'value',
+	);
+
+	$changed = false;
+
+	foreach ( $decoded['fields'] as $field_id => &$field ) {
+		$field_type = $field['type'] ?? '';
+
+		if ( ! isset( $content_field_keys[ $field_type ] ) ) {
+			continue;
+		}
+
+		$value_key = $content_field_keys[ $field_type ];
+		$raw_value = $raw_data['fields'][ $field_id ][ $value_key ] ?? null;
+
+		if ( ! is_string( $raw_value ) || '' === $raw_value ) {
+			continue;
+		}
+
+		$field[ $value_key ] = wp_kses_post( $raw_value );
+		$changed             = true;
+	}
+
+	unset( $field );
+
+	if ( ! $changed ) {
+		return $form;
+	}
+
+	// Prevent WordPress core from stripping the sanitized HTML again on save.
+	kses_remove_filters();
+
+	$form['post_content'] = wpforms_encode( $decoded );
+
+	return $form;
+}
+add_filter( 'wpforms_save_form_args', 'tod_wpforms_allow_safe_html_in_content_fields', 10, 2 );
+
+/**
+ * Re-enable core KSES filtering after the form save request completes,
+ * matching WPForms' own kses_remove_filters()/kses_init_filters() pattern.
+ */
+function tod_wpforms_restore_kses_filters() {
+
+	if ( ! current_user_can( 'unfiltered_html' ) ) {
+		kses_init_filters();
+	}
+}
+add_action( 'wpforms_builder_save_form', 'tod_wpforms_restore_kses_filters' );
