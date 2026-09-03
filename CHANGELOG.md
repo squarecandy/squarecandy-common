@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.17](https://github.com/squarecandy/squarecandy-common/compare/v2.0.16...v2.0.17) (2026-09-03)
+
+
+### Bug Fixes
+
+* more consise fix with using kses_remove_filters / kses_init_filters ([af1d28a](https://github.com/squarecandy/squarecandy-common/commit/af1d28a967271a24765d27a37b191b53f05da521))
+* WPForms with DISALLOW_UNFILTERED_HTML strips all HTML from Rich Text ([57ff1ad](https://github.com/squarecandy/squarecandy-common/commit/57ff1ad6227700e174ff3e96d182c1cc8c74fcde))
+
 ### [2.0.16](https://github.com/squarecandy/squarecandy-common/compare/v2.0.15...v2.0.16) (2026-07-03)
 
 
