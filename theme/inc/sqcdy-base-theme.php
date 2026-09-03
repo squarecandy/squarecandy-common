@@ -535,28 +535,31 @@ function squarecandy_disable_command_palette() {
 //// WPForms ////
 
 /**
- * WPForms is stripping all tags from HTML and Rich Text fields when used
- * in combination with DISALLOW_UNFILTERED_HTML.
+ * DISALLOW_UNFILTERED_HTML makes WPForms strip ALL HTML from the "HTML", "Content",
+ * and "Rich Text" field types on save.
  *
- * Re-inject wp_kses_post()-sanitized markup for content-style WPForms fields
- * that were fully stripped by WPForms' own "no unfiltered_html" protection.
+ * This re-applies wp_kses_post() sanitized markup for those field types after WPForms
+ * already saved the stripped form, and writes it with a direct $wpdb call so WP
+ * core's own KSES filters (content_save_pre => wp_filter_post_kses) never run over
+ * the raw form JSON, where they can corrupt unrelated data.
  *
- * @param array $form Post data about to be passed to wp_update_post().
- * @param array $data Fully processed (and, for non-unfiltered_html users, tag-stripped) form data.
+ * @TODO - REMOVE THIS FUNCTION WHEN WPFORMS FIXES THEIR STRIPPING LOGIC.
+ * Bug was reported to WPForms on 2026-09-03
  *
- * @return array
+ * @param int $form_id Saved form ID.
  */
-function tod_wpforms_allow_safe_html_in_content_fields( $form, $data ) {
+function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 
-	// Nothing to fix if this user is actually allowed unfiltered HTML.
-	if ( current_user_can( 'unfiltered_html' ) ) {
-		return $form;
+	global $wpdb;
+
+	if ( empty( $form_id ) || current_user_can( 'unfiltered_html' ) ) {
+		return;
 	}
 
-	// Nonce is already verified by WPForms' own wpforms_save_form() handler before this filter runs.
+	// Nonce is already verified by WPForms' own wpforms_save_form() handler earlier in this request.
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
-	if ( empty( $_POST['data'] ) || empty( $form['post_content'] ) || ! function_exists( 'wpforms_prepare_form_data' ) ) {
-		return $form;
+	if ( empty( $_POST['data'] ) || ! function_exists( 'wpforms_prepare_form_data' ) ) {
+		return;
 	}
 
 	// Reconstruct the original, unstripped submission from the raw builder POST payload.
@@ -565,13 +568,14 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form, $data ) {
 	$raw_data  = wpforms_prepare_form_data( $form_post );
 
 	if ( empty( $raw_data['fields'] ) ) {
-		return $form;
+		return;
 	}
 
-	$decoded = json_decode( wp_unslash( $form['post_content'] ), true );
+	// Read back what WPForms just saved (already stripped of HTML for this user).
+	$decoded = wpforms_decode( get_post_field( 'post_content', $form_id, 'raw' ) );
 
 	if ( empty( $decoded['fields'] ) ) {
-		return $form;
+		return;
 	}
 
 	// Field type => the option key holding its HTML content.
@@ -600,30 +604,22 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form, $data ) {
 		$field[ $value_key ] = wp_kses_post( $raw_value );
 		$changed             = true;
 	}
-
 	unset( $field );
 
 	if ( ! $changed ) {
-		return $form;
+		return;
 	}
 
-	// Prevent WordPress core from stripping the sanitized HTML again on save.
-	kses_remove_filters();
+	// Direct write bypasses wp_update_post()/content_save_pre entirely, so core KSES
+	// never re-processes the JSON blob (no global filter state to toggle or restore).
+	$wpdb->update(
+		$wpdb->posts,
+		array( 'post_content' => wp_json_encode( $decoded ) ),
+		array( 'ID' => $form_id ),
+		array( '%s' ),
+		array( '%d' )
+	);
 
-	$form['post_content'] = wpforms_encode( $decoded );
-
-	return $form;
+	clean_post_cache( $form_id );
 }
-add_filter( 'wpforms_save_form_args', 'tod_wpforms_allow_safe_html_in_content_fields', 10, 2 );
-
-/**
- * Re-enable core KSES filtering after the form save request completes,
- * matching WPForms' own kses_remove_filters()/kses_init_filters() pattern.
- */
-function tod_wpforms_restore_kses_filters() {
-
-	if ( ! current_user_can( 'unfiltered_html' ) ) {
-		kses_init_filters();
-	}
-}
-add_action( 'wpforms_builder_save_form', 'tod_wpforms_restore_kses_filters' );
+add_action( 'wpforms_builder_save_form', 'tod_wpforms_allow_safe_html_in_content_fields' );
