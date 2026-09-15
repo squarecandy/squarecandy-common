@@ -317,11 +317,20 @@ add_filter(
 );
 
 
-// disable Post Types Order plugin drag&drop reordering on regular admin archive pages
+// Customization for Post Types Order plugin
 if ( ! function_exists( 'squarecandy_pto_options' ) ) :
 
-	add_filter( 'pto/get_options', 'squarecandy_pto_options' );
+	// add filter for stupid post types filter that appears even if there's only one post type
+	add_filter( 'cpto/interface/show_available_posts', 'squarecandy_pto_show_available_posts', 10, 2 );
+	function squarecandy_pto_show_available_posts( $show, $post_types ) {
+		if ( count( $post_types ) < 2 ) {
+			$show = false;
+		}
+		return $show;
+	}
 
+	// disable Post Types Order plugin drag&drop reordering on regular admin archive pages
+	add_filter( 'pto/get_options', 'squarecandy_pto_options' );
 	function squarecandy_pto_options( $options ) {
 
 		// if this fires before the admin screen function, bail out
