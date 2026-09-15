@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.19](https://github.com/squarecandy/squarecandy-common/compare/v2.0.18...v2.0.19) (2026-09-15)
+
+
+### Bug Fixes
+
+* add filter for CPTO ([4bc7c6c](https://github.com/squarecandy/squarecandy-common/commit/4bc7c6c56037a645d0808931282b4e651f48eda9))
+
 ### [2.0.18](https://github.com/squarecandy/squarecandy-common/compare/v2.0.17...v2.0.18) (2026-09-03)
 
 
