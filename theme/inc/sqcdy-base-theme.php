@@ -545,9 +545,9 @@ function squarecandy_disable_command_palette() {
 
 /**
  * DISALLOW_UNFILTERED_HTML makes WPForms strip ALL HTML from the "HTML", "Content",
- * and "Rich Text" field types on save.
+ * and "Rich Text" field types, and from the confirmation messages, on save.
  *
- * This re-applies wp_kses_post() sanitized markup for those field types after WPForms
+ * This re-applies wp_kses_post() sanitized markup for those fields after WPForms
  * already saved the stripped form, and writes it with a direct $wpdb call so WP
  * core's own KSES filters (content_save_pre => wp_filter_post_kses) never run over
  * the raw form JSON, where they can corrupt unrelated data.
@@ -576,14 +576,10 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 	$form_post = json_decode( wp_unslash( $_POST['data'] ), false );
 	$raw_data  = wpforms_prepare_form_data( $form_post );
 
-	if ( empty( $raw_data['fields'] ) ) {
-		return;
-	}
-
 	// Read back what WPForms just saved (already stripped of HTML for this user).
 	$decoded = wpforms_decode( get_post_field( 'post_content', $form_id, 'raw' ) );
 
-	if ( empty( $decoded['fields'] ) ) {
+	if ( empty( $decoded ) || ! is_array( $decoded ) ) {
 		return;
 	}
 
@@ -596,7 +592,7 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 
 	$changed = false;
 
-	foreach ( $decoded['fields'] as $field_id => &$field ) {
+	foreach ( $decoded['fields'] ?? array() as $field_id => $field ) {
 		$field_type = $field['type'] ?? '';
 
 		if ( ! isset( $content_field_keys[ $field_type ] ) ) {
@@ -610,10 +606,21 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 			continue;
 		}
 
-		$field[ $value_key ] = wp_kses_post( $raw_value );
-		$changed             = true;
+		$decoded['fields'][ $field_id ][ $value_key ] = wp_kses_post( wp_unslash( $raw_value ) );
+		$changed                                      = true;
 	}
-	unset( $field );
+
+	// Confirmation messages (Settings > Confirmations) are stripped the same way.
+	foreach ( $decoded['settings']['confirmations'] ?? array() as $confirmation_id => $confirmation ) {
+		$raw_value = $raw_data['settings']['confirmations'][ $confirmation_id ]['message'] ?? null;
+
+		if ( ! is_string( $raw_value ) || '' === $raw_value ) {
+			continue;
+		}
+
+		$decoded['settings']['confirmations'][ $confirmation_id ]['message'] = wp_kses_post( wp_unslash( $raw_value ) );
+		$changed = true;
+	}
 
 	if ( ! $changed ) {
 		return;
