@@ -544,8 +544,9 @@ function squarecandy_disable_command_palette() {
 //// WPForms ////
 
 /**
- * DISALLOW_UNFILTERED_HTML makes WPForms strip ALL HTML from the "HTML", "Content",
- * and "Rich Text" field types, and from the confirmation messages, on save.
+ * DISALLOW_UNFILTERED_HTML makes WPForms strip ALL HTML from the "HTML" and "Content"
+ * field types, and from the confirmation messages, on save. (The "Rich Text" field is
+ * for end user entries, not admin-authored markup, so it is left to WPForms.)
  *
  * We re-apply wp_kses_post() sanitized markup for those fields so the form, and the
  * revision WordPress creates from it, keep the HTML:
@@ -576,9 +577,8 @@ function tod_wpforms_map_html_values( $form, $callback ) {
 
 	// Field type => the option key holding its HTML content.
 	$content_field_keys = array(
-		'html'     => 'code',
-		'content'  => 'content',
-		'richtext' => 'value',
+		'html'    => 'code',
+		'content' => 'content',
 	);
 
 	foreach ( $form['fields'] ?? array() as $field_id => $field ) {
