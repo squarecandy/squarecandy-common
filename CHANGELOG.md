@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.20](https://github.com/squarecandy/squarecandy-common/compare/v2.0.19...v2.0.20) (2026-10-20)
+
+
+### Bug Fixes
+
+* add confirmation messages to WPForms rich text save fix ([97b263a](https://github.com/squarecandy/squarecandy-common/commit/97b263abc5e37e0f562c42742e6c5e71481797c5))
+* add revisions support as much as possible ([201e81a](https://github.com/squarecandy/squarecandy-common/commit/201e81a571e4654b8d337d988675880f9fdc2915))
+* remove the "Rich text" field. That's for user entered basic styling and should go through the normal WPForms security / processing. Has nothing to do with admin save/restore. ([9ced46f](https://github.com/squarecandy/squarecandy-common/commit/9ced46fd90c67f71dd94771c533d1bf234d120fb))
+
 ### [2.0.19](https://github.com/squarecandy/squarecandy-common/compare/v2.0.18...v2.0.19) (2026-09-15)
 
 
