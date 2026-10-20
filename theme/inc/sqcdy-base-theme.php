@@ -547,41 +547,32 @@ function squarecandy_disable_command_palette() {
  * DISALLOW_UNFILTERED_HTML makes WPForms strip ALL HTML from the "HTML", "Content",
  * and "Rich Text" field types, and from the confirmation messages, on save.
  *
- * This re-applies wp_kses_post() sanitized markup for those fields after WPForms
- * already saved the stripped form, and writes it with a direct $wpdb call so WP
- * core's own KSES filters (content_save_pre => wp_filter_post_kses) never run over
- * the raw form JSON, where they can corrupt unrelated data.
+ * We re-apply wp_kses_post() sanitized markup for those fields so the form, and the
+ * revision WordPress creates from it, keep the HTML:
  *
- * @TODO - REMOVE THIS FUNCTION WHEN WPFORMS FIXES THEIR STRIPPING LOGIC.
+ * 1. Builder save: the sanitized HTML is rebuilt from the raw builder POST into the
+ *    post_content WPForms is about to save.
+ * 2. Revision restore / initial revision: wp_restore_post_revision() and
+ *    wp_save_post_revision() run the JSON through core KSES, which corrupts it.
+ *    Revisions are trusted (they only ever contain HTML we already sanitized on
+ *    save); anything restored is sanitized again the next time the form is saved.
+ *
+ * Core's JSON-damaging content filters are only removed for those WPForms writes
+ * (the same filters WPForms removes itself for its own saves). Nothing here grants
+ * the user the unfiltered_html capability.
+ *
+ * @TODO - REMOVE THIS BLOCK IF WPFORMS EVER FIXES THIS STRIPPING LOGIC.
  * Bug was reported to WPForms on 2026-09-03
- *
- * @param int $form_id Saved form ID.
  */
-function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 
-	global $wpdb;
-
-	if ( empty( $form_id ) || current_user_can( 'unfiltered_html' ) ) {
-		return;
-	}
-
-	// Nonce is already verified by WPForms' own wpforms_save_form() handler earlier in this request.
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing
-	if ( empty( $_POST['data'] ) || ! function_exists( 'wpforms_prepare_form_data' ) ) {
-		return;
-	}
-
-	// Reconstruct the original, unstripped submission from the raw builder POST payload.
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
-	$form_post = json_decode( wp_unslash( $_POST['data'] ), false );
-	$raw_data  = wpforms_prepare_form_data( $form_post );
-
-	// Read back what WPForms just saved (already stripped of HTML for this user).
-	$decoded = wpforms_decode( get_post_field( 'post_content', $form_id, 'raw' ) );
-
-	if ( empty( $decoded ) || ! is_array( $decoded ) ) {
-		return;
-	}
+/**
+ * Run a callback over every HTML-bearing value of decoded WPForms form data.
+ *
+ * @param array    $form     Decoded form data.
+ * @param callable $callback function( string $value, array $path ): string. $path is the key path to the value.
+ * @return array The form data, with values replaced by the callback.
+ */
+function tod_wpforms_map_html_values( $form, $callback ) {
 
 	// Field type => the option key holding its HTML content.
 	$content_field_keys = array(
@@ -590,52 +581,134 @@ function tod_wpforms_allow_safe_html_in_content_fields( $form_id ) {
 		'richtext' => 'value',
 	);
 
-	$changed = false;
+	foreach ( $form['fields'] ?? array() as $field_id => $field ) {
+		$value_key = $content_field_keys[ $field['type'] ?? '' ] ?? null;
+		$value     = $value_key ? ( $field[ $value_key ] ?? null ) : null;
 
-	foreach ( $decoded['fields'] ?? array() as $field_id => $field ) {
-		$field_type = $field['type'] ?? '';
-
-		if ( ! isset( $content_field_keys[ $field_type ] ) ) {
-			continue;
+		if ( is_string( $value ) && '' !== $value ) {
+			$form['fields'][ $field_id ][ $value_key ] = $callback( $value, array( 'fields', $field_id, $value_key ) );
 		}
-
-		$value_key = $content_field_keys[ $field_type ];
-		$raw_value = $raw_data['fields'][ $field_id ][ $value_key ] ?? null;
-
-		if ( ! is_string( $raw_value ) || '' === $raw_value ) {
-			continue;
-		}
-
-		$decoded['fields'][ $field_id ][ $value_key ] = wp_kses_post( wp_unslash( $raw_value ) );
-		$changed                                      = true;
 	}
 
-	// Confirmation messages (Settings > Confirmations) are stripped the same way.
-	foreach ( $decoded['settings']['confirmations'] ?? array() as $confirmation_id => $confirmation ) {
-		$raw_value = $raw_data['settings']['confirmations'][ $confirmation_id ]['message'] ?? null;
+	// Confirmation messages (Settings > Confirmations).
+	foreach ( $form['settings']['confirmations'] ?? array() as $confirmation_id => $confirmation ) {
+		$value = $confirmation['message'] ?? null;
 
-		if ( ! is_string( $raw_value ) || '' === $raw_value ) {
-			continue;
+		if ( is_string( $value ) && '' !== $value ) {
+			$form['settings']['confirmations'][ $confirmation_id ]['message'] = $callback( $value, array( 'settings', 'confirmations', $confirmation_id, 'message' ) );
 		}
-
-		$decoded['settings']['confirmations'][ $confirmation_id ]['message'] = wp_kses_post( wp_unslash( $raw_value ) );
-		$changed = true;
 	}
+
+	return $form;
+}
+
+/**
+ * Stop core's post content filters from damaging the WPForms JSON for the current write.
+ * Same filters WPForms removes in its own form handler.
+ */
+function tod_wpforms_protect_form_json() {
+	remove_filter( 'content_save_pre', 'balanceTags', 50 );
+	remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
+	add_filter( 'wp_targeted_link_rel', '__return_empty_string', 50 );
+}
+
+/**
+ * Builder save: runs just before WPForms calls wp_update_post() with the stripped form.
+ *
+ * @param array $form Post data about to be saved.
+ * @param array $data Stripped form data.
+ * @param array $args WPForms save arguments.
+ * @return array
+ */
+function tod_wpforms_allow_safe_html_in_content_fields( $form, $data = array(), $args = array() ) {
+
+	// Only the builder's own save (WPForms has already verified the nonce and permissions).
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( 'save_form' !== ( $args['context'] ?? '' ) || empty( $_POST['data'] ) || empty( $form['post_content'] ) ) {
+		return $form;
+	}
+
+	if ( current_user_can( 'unfiltered_html' ) || ! function_exists( 'wpforms_prepare_form_data' ) ) {
+		return $form;
+	}
+
+	$saved = json_decode( wp_unslash( $form['post_content'] ), true );
+
+	if ( ! is_array( $saved ) ) {
+		return $form;
+	}
+
+	// Reconstruct the original, unstripped submission from the raw builder POST payload.
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
+	$raw_data = wpforms_prepare_form_data( json_decode( wp_unslash( $_POST['data'] ), false ) );
+	$changed  = false;
+
+	$saved = tod_wpforms_map_html_values(
+		$saved,
+		function ( $value, $path ) use ( $raw_data, &$changed ) {
+			$raw_value = $raw_data;
+
+			foreach ( $path as $key ) {
+				$raw_value = $raw_value[ $key ] ?? null;
+			}
+
+			if ( ! is_string( $raw_value ) || '' === $raw_value ) {
+				return $value;
+			}
+
+			$changed = true;
+
+			return wp_kses_post( wp_unslash( $raw_value ) );
+		}
+	);
 
 	if ( ! $changed ) {
+		return $form;
+	}
+
+	tod_wpforms_protect_form_json();
+
+	$form['post_content'] = wpforms_encode( $saved );
+
+	return $form;
+}
+add_filter( 'wpforms_save_form_args', 'tod_wpforms_allow_safe_html_in_content_fields', 99, 3 );
+
+/**
+ * Revision restore: WPForms calls wp_restore_post_revision() when the (nonce protected)
+ * "Restore this revision" link is clicked in the builder.
+ */
+function tod_wpforms_prepare_revision_restore() {
+
+	if ( current_user_can( 'unfiltered_html' ) ) {
 		return;
 	}
 
-	// Direct write bypasses wp_update_post()/content_save_pre entirely, so core KSES
-	// never re-processes the JSON blob (no global filter state to toggle or restore).
-	$wpdb->update(
-		$wpdb->posts,
-		array( 'post_content' => wp_json_encode( $decoded ) ),
-		array( 'ID' => $form_id ),
-		array( '%s' ),
-		array( '%d' )
-	);
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( 'restore_revision' !== ( $_GET['action'] ?? '' ) || empty( $_GET['revision_id'] ) || empty( $_GET['wpforms_nonce'] ) ) {
+		return;
+	}
 
-	clean_post_cache( $form_id );
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wpforms_nonce'] ) ), 'restore_revision' ) ) {
+		return;
+	}
+
+	$revision_id = absint( $_GET['revision_id'] );
+	$revision    = wp_get_post_revision( $revision_id );
+
+	if ( $revision && 'wpforms' === get_post_type( $revision->post_parent ) ) {
+		tod_wpforms_protect_form_json();
+	}
 }
-add_action( 'wpforms_builder_save_form', 'tod_wpforms_allow_safe_html_in_content_fields' );
+add_action( 'current_screen', 'tod_wpforms_prepare_revision_restore', 9 );
+
+/**
+ * Initial revision: WPForms creates it when the builder loads for a form that has none.
+ */
+function tod_wpforms_prepare_initial_revision() {
+
+	if ( ! current_user_can( 'unfiltered_html' ) ) {
+		tod_wpforms_protect_form_json();
+	}
+}
+add_action( 'wpforms_builder_init', 'tod_wpforms_prepare_initial_revision', 9 );
