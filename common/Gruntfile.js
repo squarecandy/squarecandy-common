@@ -168,7 +168,7 @@ module.exports = function( grunt ) {
 				map: true, // inline sourcemaps
 				processors: [
 					// add vendor prefixes
-					require( 'autoprefixer' )( { grid: 'autoreplace' } ),
+					require( 'autoprefixer' )(),
 					// minify the result
 					require( 'cssnano' )( {
 						preset: [ 'default', {
